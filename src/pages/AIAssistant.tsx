@@ -97,7 +97,7 @@ export default function AIAssistant() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}
-                  className="pr-4 h-11 rounded-xl border-primary/20 bg-background/80 shadow-inner text-black placeholder:text-black focus-visible:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)]"
+                  className="pr-4 h-11 rounded-xl border-primary/20 bg-white shadow-inner text-black placeholder:text-black focus-visible:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)]"
                 />
               </div>
               <Button type="submit" size="icon" className="shrink-0 h-11 w-11 rounded-xl" disabled={isLoading}>
