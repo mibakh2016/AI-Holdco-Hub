@@ -5,15 +5,51 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, Mail, ArrowRight } from "lucide-react";
+import { supabase } from "@/integrations/supabase/supabase-client";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/dashboard");
+    setLoading(true);
+
+    try {
+      if (isSignUp) {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName },
+            emailRedirectTo: window.location.origin,
+          },
+        });
+        if (error) throw error;
+        toast({
+          title: "Check your email",
+          description: "We've sent you a confirmation link to verify your account.",
+        });
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        navigate("/dashboard");
+      }
+    } catch (err: any) {
+      toast({
+        title: "Authentication error",
+        description: err.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,11 +101,28 @@ export default function Login() {
             </div>
           </div>
           <div className="space-y-1">
-            <h1 className="font-display text-2xl font-bold tracking-tight">Welcome back</h1>
-            <p className="text-sm text-muted-foreground">Enter your credentials to access the portal</p>
+            <h1 className="font-display text-2xl font-bold tracking-tight">
+              {isSignUp ? "Create your account" : "Welcome back"}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {isSignUp ? "Sign up to access the portal" : "Enter your credentials to access the portal"}
+            </p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {isSignUp && (
+              <div className="space-y-1.5">
+                <Label htmlFor="fullName" className="text-label">Full Name</Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="Your full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
+              </div>
+            )}
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-label">Email</Label>
               <div className="relative">
@@ -81,14 +134,12 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
+                  required
                 />
               </div>
             </div>
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-label">Password</Label>
-                <button type="button" className="text-xs text-primary hover:underline font-medium">Forgot password?</button>
-              </div>
+              <Label htmlFor="password" className="text-label">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -98,17 +149,27 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10"
+                  required
+                  minLength={6}
                 />
               </div>
             </div>
-            <Button type="submit" className="w-full font-semibold">
-              Sign in
+            <Button type="submit" className="w-full font-semibold" disabled={loading}>
+              {loading ? "Please wait…" : isSignUp ? "Sign up" : "Sign in"}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </form>
 
-          <p className="text-center text-xs text-muted-foreground">
-            Access is by invitation only. Contact your administrator for credentials.
+          <p className="text-center text-sm text-muted-foreground">
+            {isSignUp ? (
+              <>Already have an account?{" "}
+                <button type="button" onClick={() => setIsSignUp(false)} className="text-primary hover:underline font-medium">Sign in</button>
+              </>
+            ) : (
+              <>Don't have an account?{" "}
+                <button type="button" onClick={() => setIsSignUp(true)} className="text-primary hover:underline font-medium">Sign up</button>
+              </>
+            )}
           </p>
         </motion.div>
       </div>
