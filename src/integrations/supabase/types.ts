@@ -118,6 +118,7 @@ export type Database = {
           document_type: string
           effective_date: string | null
           entity_id: string | null
+          extracted_text: string | null
           file_name: string | null
           file_size: number | null
           file_url: string | null
@@ -138,6 +139,7 @@ export type Database = {
           document_type?: string
           effective_date?: string | null
           entity_id?: string | null
+          extracted_text?: string | null
           file_name?: string | null
           file_size?: number | null
           file_url?: string | null
@@ -158,6 +160,7 @@ export type Database = {
           document_type?: string
           effective_date?: string | null
           entity_id?: string | null
+          extracted_text?: string | null
           file_name?: string | null
           file_size?: number | null
           file_url?: string | null
