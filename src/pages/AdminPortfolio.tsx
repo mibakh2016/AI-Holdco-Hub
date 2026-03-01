@@ -1,8 +1,8 @@
-import { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent, useRef } from "react";
 import { motion } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { FolderOpen, Plus, Pencil, Trash2, ExternalLink, Loader2, X } from "lucide-react";
+import { FolderOpen, Plus, Pencil, Trash2, ExternalLink, Loader2, X, Upload, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,6 +45,10 @@ export default function AdminPortfolio() {
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState<EntityForm>(emptyForm);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: entities, isLoading } = useQuery({
     queryKey: ["admin-portfolio-entities"],
@@ -58,10 +62,26 @@ export default function AdminPortfolio() {
     },
   });
 
+  const uploadLogo = async (entityId: string): Promise<string | null> => {
+    if (!logoFile) return null;
+    const ext = logoFile.name.split(".").pop();
+    const path = `${entityId}.${ext}`;
+    
+    const { error } = await supabase.storage
+      .from("entity-logos")
+      .upload(path, logoFile, { upsert: true });
+    if (error) throw error;
+
+    const { data } = supabase.storage.from("entity-logos").getPublicUrl(path);
+    return data.publicUrl;
+  };
+
   const saveMutation = useMutation({
     mutationFn: async () => {
       if (!form.name.trim()) throw new Error("Name is required");
-      const payload = {
+      setUploadingLogo(!!logoFile);
+
+      const payload: any = {
         name: form.name.trim(),
         sector: form.sector.trim() || null,
         description: form.description.trim() || null,
@@ -72,16 +92,31 @@ export default function AdminPortfolio() {
       };
 
       if (editId) {
+        if (logoFile) {
+          const logoUrl = await uploadLogo(editId);
+          if (logoUrl) payload.logo_url = logoUrl;
+        }
         const { error } = await supabase
           .from("portfolio_entities")
           .update(payload)
           .eq("id", editId);
         if (error) throw error;
       } else {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from("portfolio_entities")
-          .insert([payload]);
+          .insert([payload])
+          .select("id")
+          .single();
         if (error) throw error;
+        if (logoFile && data) {
+          const logoUrl = await uploadLogo(data.id);
+          if (logoUrl) {
+            await supabase
+              .from("portfolio_entities")
+              .update({ logo_url: logoUrl })
+              .eq("id", data.id);
+          }
+        }
       }
     },
     onSuccess: () => {
@@ -90,6 +125,7 @@ export default function AdminPortfolio() {
       closeDialog();
     },
     onError: (err: Error) => toast.error(err.message),
+    onSettled: () => setUploadingLogo(false),
   });
 
   const deleteMutation = useMutation({
@@ -111,6 +147,8 @@ export default function AdminPortfolio() {
   const openAdd = () => {
     setEditId(null);
     setForm(emptyForm);
+    setLogoFile(null);
+    setLogoPreview(null);
     setDialogOpen(true);
   };
 
@@ -125,6 +163,8 @@ export default function AdminPortfolio() {
       website_url: entity.website_url || "",
       latest_milestone: entity.latest_milestone || "",
     });
+    setLogoFile(null);
+    setLogoPreview(entity.logo_url || null);
     setDialogOpen(true);
   };
 
@@ -132,6 +172,19 @@ export default function AdminPortfolio() {
     setDialogOpen(false);
     setEditId(null);
     setForm(emptyForm);
+    setLogoFile(null);
+    setLogoPreview(null);
+  };
+
+  const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Logo must be under 2MB");
+      return;
+    }
+    setLogoFile(file);
+    setLogoPreview(URL.createObjectURL(file));
   };
 
   const statusColor = (s: string) => {
@@ -185,17 +238,28 @@ export default function AdminPortfolio() {
                 {entities.map((entity) => (
                   <TableRow key={entity.id} className="text-black">
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{entity.name}</span>
-                        {entity.website_url && (
-                          <a href={entity.website_url} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground hover:text-primary" />
-                          </a>
-                        )}
+                      <div className="flex items-center gap-3">
+                        <div className="h-9 w-9 rounded-lg border bg-muted flex items-center justify-center overflow-hidden shrink-0">
+                          {(entity as any).logo_url ? (
+                            <img src={(entity as any).logo_url} alt={entity.name} className="h-full w-full object-cover" />
+                          ) : (
+                            <Building2 className="h-4 w-4 text-muted-foreground" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{entity.name}</span>
+                            {entity.website_url && (
+                              <a href={entity.website_url} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="h-3.5 w-3.5 text-muted-foreground hover:text-primary" />
+                              </a>
+                            )}
+                          </div>
+                          {entity.description && (
+                            <p className="text-xs text-black mt-0.5 line-clamp-1">{entity.description}</p>
+                          )}
+                        </div>
                       </div>
-                      {entity.description && (
-                        <p className="text-xs text-black mt-0.5 line-clamp-1">{entity.description}</p>
-                      )}
                     </TableCell>
                     <TableCell>
                       {entity.sector ? (
@@ -242,6 +306,45 @@ export default function AdminPortfolio() {
             <DialogTitle>{editId ? "Edit Entity" : "Add Portfolio Entity"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Logo Upload */}
+            <div className="space-y-2">
+              <Label>Company Logo</Label>
+              <div className="flex items-center gap-4">
+                <div
+                  className="h-16 w-16 rounded-xl border-2 border-dashed border-input bg-muted flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary transition-colors"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {logoPreview ? (
+                    <img src={logoPreview} alt="Logo preview" className="h-full w-full object-cover" />
+                  ) : (
+                    <Upload className="h-5 w-5 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+                    {logoPreview ? "Change Logo" : "Upload Logo"}
+                  </Button>
+                  {logoPreview && (
+                    <button
+                      type="button"
+                      className="text-xs text-destructive hover:underline text-left"
+                      onClick={() => { setLogoFile(null); setLogoPreview(null); }}
+                    >
+                      Remove
+                    </button>
+                  )}
+                  <span className="text-[11px] text-muted-foreground">PNG, JPG or SVG. Max 2MB.</span>
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                  className="hidden"
+                  onChange={handleLogoSelect}
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label>Name *</Label>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Company name" />
@@ -310,8 +413,8 @@ export default function AdminPortfolio() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={closeDialog}>Cancel</Button>
-            <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
-              {saveMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+            <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending || uploadingLogo}>
+              {(saveMutation.isPending || uploadingLogo) ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
               {editId ? "Save Changes" : "Add Entity"}
             </Button>
           </DialogFooter>
