@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, KeyboardEvent } from "react";
 import { motion } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { FolderOpen, Plus, Pencil, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { FolderOpen, Plus, Pencil, Trash2, ExternalLink, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -199,7 +199,11 @@ export default function AdminPortfolio() {
                     </TableCell>
                     <TableCell>
                       {entity.sector ? (
-                        <Badge variant="outline" className="text-xs">{entity.sector}</Badge>
+                        <div className="flex flex-wrap gap-1">
+                          {entity.sector.split(",").map((s: string, i: number) => (
+                            <Badge key={i} variant="outline" className="text-xs">{s.trim()}</Badge>
+                          ))}
+                        </div>
                       ) : (
                         <span className="text-xs text-black">—</span>
                       )}
@@ -244,8 +248,36 @@ export default function AdminPortfolio() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Sector</Label>
-                <Input value={form.sector} onChange={(e) => setForm({ ...form, sector: e.target.value })} placeholder="e.g. Healthcare, Fintech" />
+                <Label>Sector Tags</Label>
+                <div className="flex flex-wrap gap-1.5 min-h-[36px] rounded-lg border border-input bg-card px-2 py-1.5 focus-within:border-input-focus focus-within:shadow-cake-focus transition-all">
+                  {form.sector.split(",").filter(Boolean).map((tag, i) => (
+                    <Badge key={i} variant="secondary" className="text-xs gap-1 pr-1">
+                      {tag.trim()}
+                      <button type="button" onClick={() => {
+                        const tags = form.sector.split(",").filter(Boolean).map(t => t.trim());
+                        tags.splice(i, 1);
+                        setForm({ ...form, sector: tags.join(",") });
+                      }}><X className="h-3 w-3" /></button>
+                    </Badge>
+                  ))}
+                  <input
+                    className="flex-1 min-w-[100px] bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                    placeholder="Type & press Enter"
+                    onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                      if (e.key === "Enter" || e.key === ",") {
+                        e.preventDefault();
+                        const val = e.currentTarget.value.trim();
+                        if (val) {
+                          const existing = form.sector.split(",").filter(Boolean).map(t => t.trim());
+                          if (!existing.includes(val)) {
+                            setForm({ ...form, sector: [...existing, val].join(",") });
+                          }
+                          e.currentTarget.value = "";
+                        }
+                      }
+                    }}
+                  />
+                </div>
               </div>
               <div className="space-y-2">
                 <Label>Stake %</Label>
