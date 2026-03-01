@@ -23,9 +23,9 @@ export default function AdminValuations() {
       const { data, error } = await supabase
         .from("portfolio_entities")
         .select("id, name, sector, valuation_amount")
-        .order("name");
+        .order("name") as any;
       if (error) throw error;
-      return data;
+      return data as { id: string; name: string; sector: string | null; valuation_amount: number }[];
     },
   });
 
@@ -46,7 +46,7 @@ export default function AdminValuations() {
   const saveMutation = useMutation({
     mutationFn: async () => {
       const updates = Object.entries(values).map(([id, val]) =>
-        supabase.from("portfolio_entities").update({ valuation_amount: parseFloat(val) || 0 }).eq("id", id)
+        supabase.from("portfolio_entities").update({ valuation_amount: parseFloat(val) || 0 } as any).eq("id", id)
       );
       const results = await Promise.all(updates);
       const err = results.find((r) => r.error);
