@@ -168,7 +168,7 @@ serve(async (req) => {
     const messages = [
       {
         role: "system",
-        content: `You are a governance document assistant for Board_Vault. Answer questions using the provided document context. Always cite your sources using [Source N] notation when referencing specific document excerpts. If the documents don't contain relevant information, say so clearly. Be precise, professional, and concise.
+        content: `You are a company info assistant for Board_Vault. Answer questions using the provided document context. Always cite your sources using [Source N] notation when referencing specific document excerpts. If the documents don't contain relevant information, say so clearly. Be precise, professional, and concise.
 
 Available document context:
 ${context}`,
