@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Login() {
+  const navigate = useNavigate();
   const { session, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
@@ -19,16 +20,18 @@ export default function Login() {
   const [step, setStep] = useState<"email" | "password" | "signup">("email");
   const [submitting, setSubmitting] = useState(false);
 
-  if (authLoading) {
+  useEffect(() => {
+    if (!authLoading && session) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [authLoading, session, navigate]);
+
+  if (authLoading || session) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
-  }
-
-  if (session) {
-    return <Navigate to="/dashboard" replace />;
   }
 
   const handleEmailContinue = (e: React.FormEvent) => {
@@ -43,7 +46,7 @@ export default function Login() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      // AuthContext will detect session → Navigate component redirects
+      // AuthContext detects session; useEffect redirect handles navigation
     } catch (err: any) {
       toast({ title: "Sign in failed", description: err.message, variant: "destructive" });
     } finally {
