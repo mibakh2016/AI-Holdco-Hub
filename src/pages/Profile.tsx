@@ -64,8 +64,8 @@ export default function Profile() {
             <Input defaultValue="+1 (555) 123-4567" />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-label">Location</Label>
-            <Input defaultValue="San Francisco, CA" />
+            <Label className="text-label">Mail Address</Label>
+            <Input defaultValue="123 Market St, San Francisco, CA 94105" />
           </div>
         </div>
 
