@@ -91,14 +91,23 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are a document processing assistant. Extract all text content from the PDF and analyze it to suggest metadata. Return structured data using the provided function.`,
+            content: `You are a document processing assistant specializing in corporate and investment documents. Extract all text content from the PDF and analyze it to suggest metadata. 
+
+CRITICAL INSTRUCTIONS for shareholder/investor extraction:
+- For subscription agreements, investment agreements, and purchase agreements: The SUBSCRIBER or INVESTOR is the person/entity BUYING shares or units. Look for sections titled "Subscriber Information", "Investor Details", "Purchaser", signature blocks, or fields like "Name of Subscriber", "Investor Name", "Purchaser Name".
+- The subscriber/investor name is NOT the company issuing the shares — it is the person or entity subscribing TO buy shares.
+- Also look for: subscription amount, number of units/shares, price per unit, ownership percentage, and effective/execution dates.
+- If you find a subscriber/investor name, you MUST return it in suggested_shareholder_name.
+- If you find an ownership percentage, you MUST return it in ownership_percentage.
+
+Return structured data using the provided function.`,
           },
           {
             role: "user",
             content: [
               {
                 type: "text",
-                text: `Analyze this PDF document titled "${doc.title}". Extract ALL text content page by page, and suggest metadata fields.`,
+                text: `Analyze this PDF document titled "${doc.title}". Extract ALL text content page by page. Pay special attention to: subscriber/investor names, entity names, dates, ownership percentages, and transaction amounts. Return all metadata fields.`,
               },
               {
                 type: "image_url",
