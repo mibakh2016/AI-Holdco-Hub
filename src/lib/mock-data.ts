@@ -63,10 +63,10 @@ export const capTable = [
 ];
 
 export const portfolioVentures = [
-  { id: "pv_001", name: "MediScan AI", sector: "Healthcare", description: "AI-powered diagnostic imaging platform for early disease detection.", stakePercent: 65, milestone: "Series B closed — $12M raised" },
-  { id: "pv_002", name: "FinGuard", sector: "Fintech", description: "Real-time fraud detection and compliance monitoring for digital banks.", stakePercent: 80, milestone: "100+ enterprise clients onboarded" },
-  { id: "pv_003", name: "AutoFlow", sector: "Enterprise", description: "Intelligent process automation for supply chain and logistics.", stakePercent: 55, milestone: "Partnership with Fortune 500 manufacturer" },
-  { id: "pv_004", name: "LegalLens", sector: "Legal Tech", description: "Contract analysis and due diligence automation using NLP.", stakePercent: 70, milestone: "SOC 2 Type II certification achieved" },
+  { id: "pv_001", name: "MediScan AI", sector: "Healthcare", description: "AI-powered diagnostic imaging platform for early disease detection.", stakePercent: 65, milestone: "Series B closed — $12M raised", websiteUrl: "#" },
+  { id: "pv_002", name: "FinGuard", sector: "Fintech", description: "Real-time fraud detection and compliance monitoring for digital banks.", stakePercent: 80, milestone: "100+ enterprise clients onboarded", websiteUrl: "#" },
+  { id: "pv_003", name: "AutoFlow", sector: "Enterprise", description: "Intelligent process automation for supply chain and logistics.", stakePercent: 55, milestone: "Partnership with Fortune 500 manufacturer", websiteUrl: "#" },
+  { id: "pv_004", name: "LegalLens", sector: "Legal Tech", description: "Contract analysis and due diligence automation using NLP.", stakePercent: 70, milestone: "SOC 2 Type II certification achieved", websiteUrl: "#" },
 ];
 
 export const adminStats = {
