@@ -23,7 +23,7 @@ export default function BuyShares() {
       {/* Agreement Section */}
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-lg p-6">
         <h2 className="font-bold text-lg mb-1">Equity Units Agreement</h2>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-sm text-primary font-medium mb-4">
           Please read and accept the Share Units purchase agreement before proceeding.
         </p>
 
