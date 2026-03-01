@@ -101,40 +101,62 @@ export default function DocumentConfirmDialog({ documentId, open, onOpenChange }
   const [valuationId, setValuationId] = useState("none");
   const [effectiveDate, setEffectiveDate] = useState("");
 
-  // Initialize from AI suggestions when doc loads
-  const [initialized, setInitialized] = useState<string | null>(null);
-  if (doc && initialized !== doc.id) {
+  // Helper: fuzzy match a name against a list
+  const fuzzyMatch = (suggested: string, candidates: { id: string; name: string }[]) => {
+    const s = suggested.toLowerCase().trim();
+    // Try exact match first
+    let match = candidates.find((c) => c.name.toLowerCase().trim() === s);
+    if (match) return match.id;
+    // Try contains match
+    match = candidates.find((c) =>
+      c.name.toLowerCase().trim().includes(s) ||
+      s.includes(c.name.toLowerCase().trim())
+    );
+    if (match) return match.id;
+    // Try word-level overlap (at least 2 words match)
+    const sWords = s.split(/\s+/).filter(w => w.length > 2);
+    for (const c of candidates) {
+      const cWords = c.name.toLowerCase().trim().split(/\s+/).filter(w => w.length > 2);
+      const overlap = sWords.filter(w => cWords.includes(w));
+      if (overlap.length >= 2 || (overlap.length >= 1 && sWords.length <= 2)) return c.id;
+    }
+    return "none";
+  };
+
+  // Re-run initialization whenever doc, shareholders, or entities data changes
+  const initKey = `${doc?.id}-${shareholders?.length ?? 0}-${entities?.length ?? 0}`;
+  const [lastInitKey, setLastInitKey] = useState<string | null>(null);
+
+  if (doc && initKey !== lastInitKey) {
     setDocType(doc.document_type || aiMeta?.suggested_type || "general");
     setEffectiveDate(aiMeta?.suggested_effective_date || "");
-    
-    // Auto-match AI-suggested shareholder name to existing shareholders
-    let matchedShareholderId = "none";
-    if (aiMeta?.suggested_shareholder_name && shareholders) {
-      const suggestedName = (aiMeta.suggested_shareholder_name as string).toLowerCase().trim();
-      const match = shareholders.find((s) => 
-        s.full_name.toLowerCase().trim() === suggestedName ||
-        s.full_name.toLowerCase().trim().includes(suggestedName) ||
-        suggestedName.includes(s.full_name.toLowerCase().trim())
-      );
-      if (match) matchedShareholderId = match.id;
-    }
-    setShareholderId(matchedShareholderId);
 
-    // Auto-match AI-suggested entity name to existing entities
-    let matchedEntityId = "none";
-    if (aiMeta?.suggested_entity_name && entities) {
-      const suggestedEntity = (aiMeta.suggested_entity_name as string).toLowerCase().trim();
-      const match = entities.find((e) =>
-        e.name.toLowerCase().trim() === suggestedEntity ||
-        e.name.toLowerCase().trim().includes(suggestedEntity) ||
-        suggestedEntity.includes(e.name.toLowerCase().trim())
+    // Auto-match shareholder
+    if (aiMeta?.suggested_shareholder_name && shareholders?.length) {
+      setShareholderId(
+        fuzzyMatch(
+          aiMeta.suggested_shareholder_name as string,
+          shareholders.map((s) => ({ id: s.id, name: s.full_name }))
+        )
       );
-      if (match) matchedEntityId = match.id;
+    } else {
+      setShareholderId("none");
     }
-    setEntityId(matchedEntityId);
-    
+
+    // Auto-match entity
+    if (aiMeta?.suggested_entity_name && entities?.length) {
+      setEntityId(
+        fuzzyMatch(
+          aiMeta.suggested_entity_name as string,
+          entities.map((e) => ({ id: e.id, name: e.name }))
+        )
+      );
+    } else {
+      setEntityId("none");
+    }
+
     setValuationId("none");
-    setInitialized(doc.id);
+    setLastInitKey(initKey);
   }
 
   const confirmMutation = useMutation({
