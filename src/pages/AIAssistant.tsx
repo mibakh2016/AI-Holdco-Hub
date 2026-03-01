@@ -82,7 +82,7 @@ export default function AIAssistant() {
           <div className="relative rounded-2xl border border-border bg-card p-5 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 ring-2 ring-primary/20">
-                <Sparkles className="h-4.5 w-4.5 text-primary" />
+                <Bot className="h-4.5 w-4.5 text-primary" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-black">Document Assistant</p>
