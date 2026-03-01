@@ -66,151 +66,128 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left — Brand Panel */}
-      <div className="hidden lg:flex lg:w-[45%] flex-col justify-between bg-port-gore p-12 text-port-gore-foreground relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-20 -left-20 h-[500px] w-[500px] rounded-full bg-primary/20 blur-[140px]" />
-          <div className="absolute bottom-32 right-0 h-[300px] w-[300px] rounded-full bg-lime/15 blur-[100px]" />
-        </div>
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary font-display text-sm font-bold text-primary-foreground">
+    <div className="flex min-h-screen items-center justify-center bg-background p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45 }}
+        className="w-full max-w-[400px] space-y-8"
+      >
+        {/* Logo */}
+        <div className="text-center space-y-1">
+          <div className="flex items-center justify-center gap-2.5 mb-6">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary font-display text-sm font-bold text-primary-foreground">
               BV
             </div>
-            <span className="font-display text-lg font-bold">Board Vault</span>
           </div>
-          <p className="text-sm text-port-gore-foreground/50">Governance Portal</p>
+          <h1 className="font-display text-[22px] font-bold tracking-tight text-foreground">
+            Board Vault
+          </h1>
         </div>
-        <div className="relative z-10 space-y-6">
-          <h2 className="font-display text-4xl font-bold leading-tight tracking-tight">
-            Your governance.<br />
-            Organized. Transparent.<br />
-            <span className="text-lime">AI-powered.</span>
-          </h2>
-          <p className="text-port-gore-foreground/60 max-w-md leading-relaxed text-body">
-            Access your holdings, review governance documents, and get instant AI-powered answers — all in one secure portal.
-          </p>
-        </div>
-        <p className="relative z-10 text-xs text-port-gore-foreground/30">
-          © 2026 Nexus AI Holdings. All rights reserved.
-        </p>
-      </div>
 
-      {/* Right — Login Form */}
-      <div className="flex flex-1 items-center justify-center p-8 bg-background">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="w-full max-w-sm space-y-8"
-        >
-          {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-3 mb-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary font-display text-sm font-bold text-primary-foreground">
-              BV
-            </div>
-            <span className="font-display text-lg font-bold">Board Vault</span>
-          </div>
+        {/* Step 1: Email */}
+        {step === "email" && (
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Welcome back</h2>
 
-          <div className="space-y-1">
-            <h1 className="font-display text-2xl font-bold tracking-tight">
-              {step === "signup" ? "Create your account" : "Welcome back"}
-            </h1>
-          </div>
-
-          {/* Step 1: Email */}
-          {step === "email" && (
-            <form onSubmit={handleEmailContinue} className="space-y-5">
-              <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-label font-semibold">Email</Label>
+            <form onSubmit={handleEmailContinue} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-semibold text-foreground">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoFocus
-                  className="h-12 text-sm"
+                  className="h-[52px] text-sm rounded-lg border-2 border-border focus:border-primary transition-colors"
                 />
               </div>
-              <Button type="submit" className="w-full h-12 font-semibold text-sm">
+              <Button type="submit" className="w-full h-[52px] font-semibold text-[15px] rounded-lg">
                 Continue
               </Button>
-
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-border" />
-                <span className="text-sm text-muted-foreground">Or</span>
-                <div className="flex-1 h-px bg-border" />
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full h-12 font-medium text-sm gap-3"
-                onClick={handleGoogleSignIn}
-              >
-                <svg className="h-5 w-5" viewBox="0 0 24 24">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                </svg>
-                Continue with Google
-              </Button>
-
-              <p className="text-center text-sm text-muted-foreground">
-                No account?{" "}
-                <button type="button" onClick={() => setStep("signup")} className="text-primary hover:underline font-semibold">
-                  Create one
-                </button>
-              </p>
             </form>
-          )}
 
-          {/* Step 2: Password */}
-          {step === "password" && (
-            <form onSubmit={handleSignIn} className="space-y-5">
-              <p className="text-sm text-muted-foreground">
-                Signing in as <span className="font-medium text-foreground">{email}</span>
-                <button type="button" onClick={() => setStep("email")} className="text-primary hover:underline ml-2 text-xs font-medium">Change</button>
-              </p>
-              <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-label font-semibold">Password</Label>
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-sm text-muted-foreground font-medium">Or</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-[52px] font-medium text-sm gap-3 rounded-lg border-2"
+              onClick={handleGoogleSignIn}
+            >
+              <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+              </svg>
+              Continue with Google
+            </Button>
+
+            <p className="text-center text-sm text-muted-foreground pt-2">
+              No account?{" "}
+              <button type="button" onClick={() => setStep("signup")} className="text-primary hover:underline font-semibold">
+                Create one
+              </button>
+            </p>
+          </div>
+        )}
+
+        {/* Step 2: Password */}
+        {step === "password" && (
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Enter your password</h2>
+            <p className="text-sm text-muted-foreground -mt-4">
+              Signing in as <span className="font-medium text-foreground">{email}</span>
+              <button type="button" onClick={() => setStep("email")} className="text-primary hover:underline ml-2 text-xs font-medium">Change</button>
+            </p>
+
+            <form onSubmit={handleSignIn} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-semibold text-foreground">Password</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type="password"
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 h-12 text-sm"
+                    className="pl-11 h-[52px] text-sm rounded-lg border-2 border-border focus:border-primary transition-colors"
                     required
                     autoFocus
                     minLength={6}
                   />
                 </div>
               </div>
-              <Button type="submit" className="w-full h-12 font-semibold text-sm" disabled={loading}>
+              <Button type="submit" className="w-full h-[52px] font-semibold text-[15px] rounded-lg" disabled={loading}>
                 {loading ? "Signing in…" : "Sign in"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <p className="text-center text-sm text-muted-foreground">
-                No account?{" "}
-                <button type="button" onClick={() => setStep("signup")} className="text-primary hover:underline font-semibold">
-                  Create one
-                </button>
-              </p>
             </form>
-          )}
 
-          {/* Step 3: Sign Up */}
-          {step === "signup" && (
-            <form onSubmit={handleSignUp} className="space-y-5">
-              <div className="space-y-1.5">
-                <Label htmlFor="fullName" className="text-label font-semibold">Full Name</Label>
+            <p className="text-center text-sm text-muted-foreground">
+              No account?{" "}
+              <button type="button" onClick={() => setStep("signup")} className="text-primary hover:underline font-semibold">
+                Create one
+              </button>
+            </p>
+          </div>
+        )}
+
+        {/* Step 3: Sign Up */}
+        {step === "signup" && (
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Create your account</h2>
+
+            <form onSubmit={handleSignUp} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="text-sm font-semibold text-foreground">Full Name</Label>
                 <Input
                   id="fullName"
                   type="text"
@@ -219,11 +196,11 @@ export default function Login() {
                   onChange={(e) => setFullName(e.target.value)}
                   required
                   autoFocus
-                  className="h-12 text-sm"
+                  className="h-[52px] text-sm rounded-lg border-2 border-border focus:border-primary transition-colors"
                 />
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="signupEmail" className="text-label font-semibold">Email</Label>
+              <div className="space-y-2">
+                <Label htmlFor="signupEmail" className="text-sm font-semibold text-foreground">Email</Label>
                 <Input
                   id="signupEmail"
                   type="email"
@@ -231,11 +208,11 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="h-12 text-sm"
+                  className="h-[52px] text-sm rounded-lg border-2 border-border focus:border-primary transition-colors"
                 />
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="signupPassword" className="text-label font-semibold">Password</Label>
+              <div className="space-y-2">
+                <Label htmlFor="signupPassword" className="text-sm font-semibold text-foreground">Password</Label>
                 <Input
                   id="signupPassword"
                   type="password"
@@ -244,45 +221,45 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="h-12 text-sm"
+                  className="h-[52px] text-sm rounded-lg border-2 border-border focus:border-primary transition-colors"
                 />
               </div>
-              <Button type="submit" className="w-full h-12 font-semibold text-sm" disabled={loading}>
+              <Button type="submit" className="w-full h-[52px] font-semibold text-[15px] rounded-lg" disabled={loading}>
                 {loading ? "Creating account…" : "Create account"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-border" />
-                <span className="text-sm text-muted-foreground">Or</span>
-                <div className="flex-1 h-px bg-border" />
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full h-12 font-medium text-sm gap-3"
-                onClick={handleGoogleSignIn}
-              >
-                <svg className="h-5 w-5" viewBox="0 0 24 24">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                </svg>
-                Continue with Google
-              </Button>
-
-              <p className="text-center text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <button type="button" onClick={() => setStep("email")} className="text-primary hover:underline font-semibold">
-                  Sign in
-                </button>
-              </p>
             </form>
-          )}
-        </motion.div>
-      </div>
+
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-sm text-muted-foreground font-medium">Or</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-[52px] font-medium text-sm gap-3 rounded-lg border-2"
+              onClick={handleGoogleSignIn}
+            >
+              <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+              </svg>
+              Continue with Google
+            </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <button type="button" onClick={() => setStep("email")} className="text-primary hover:underline font-semibold">
+                Sign in
+              </button>
+            </p>
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }
