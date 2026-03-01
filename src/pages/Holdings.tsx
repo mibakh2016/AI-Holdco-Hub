@@ -56,6 +56,8 @@ export default function Holdings() {
         </Table>
       </motion.div>
 
+      <div className="h-8" />
+
       {holdings.map((tranche, i) => (
         <motion.div
           key={tranche.id}
