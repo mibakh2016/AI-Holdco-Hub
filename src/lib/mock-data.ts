@@ -72,7 +72,7 @@ export const portfolioVentures = [
 export const adminStats = {
   totalShareholders: 24,
   documentsIndexed: 187,
-  latestValuation: 48_500_000,
+  latestValuation: 2_500_000,
   pendingApprovals: 3,
 };
 
