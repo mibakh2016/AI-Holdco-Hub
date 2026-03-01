@@ -109,7 +109,7 @@ export default function BuyShares() {
 
       {/* Purchase Information */}
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-        <h2 className="font-bold text-lg mb-1">Purchase Information</h2>
+        <h2 className="font-bold text-lg mb-1">Unit Price</h2>
         <p className="text-sm text-muted-foreground mb-5">
           Current price per Equity Unit: <span className="font-semibold text-foreground">{fmt(unitPrice)}</span>
         </p>
