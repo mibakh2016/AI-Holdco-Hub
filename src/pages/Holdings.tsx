@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { holdings } from "@/lib/mock-data";
+import { holdings, holdingCompany } from "@/lib/mock-data";
 import { FileText, Download } from "lucide-react";
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 
 const fmt = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v);
@@ -10,7 +11,41 @@ const fmtDate = (d: string) =>
 
 export default function Holdings() {
   return (
-    <div className="max-w-4xl space-y-10">
+    <div className="max-w-5xl space-y-10">
+      {/* Summary Table */}
+      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/50">
+              <TableHead>Asset</TableHead>
+              <TableHead>Address</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Units (Equity%)</TableHead>
+              <TableHead>Paid Price</TableHead>
+              <TableHead>Value per</TableHead>
+              <TableHead>Total Value Estimate</TableHead>
+              <TableHead>Docs</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {holdings.map((tranche, i) => (
+              <TableRow key={tranche.id}>
+                <TableCell className="font-medium">Equity</TableCell>
+                <TableCell className="text-muted-foreground text-xs font-mono">…{tranche.id.slice(-8)}</TableCell>
+                <TableCell>{fmtDate(tranche.date)}</TableCell>
+                <TableCell>{tranche.units.toLocaleString()} ({tranche.percent.toFixed(2)}%)</TableCell>
+                <TableCell>{fmt(tranche.paidPrice)}</TableCell>
+                <TableCell>{fmt(holdingCompany.unitPrice)}</TableCell>
+                <TableCell className="font-semibold">{fmt(tranche.currentValue)}</TableCell>
+                <TableCell>
+                  <a href="#" className="text-primary hover:underline text-xs">{tranche.documents.length} legal doc{tranche.documents.length !== 1 ? "s" : ""}</a>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </motion.div>
+
       {holdings.map((tranche, i) => (
         <motion.div
           key={tranche.id}
