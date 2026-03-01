@@ -71,7 +71,7 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] max-w-3xl mx-auto">
+    <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] max-w-3xl mx-auto text-black">
       {/* Glowing search header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -87,7 +87,7 @@ export default function AIAssistant() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-black">Document Assistant</p>
-                <p className="text-[11px] text-black/60">AI-powered answers from your governance documents</p>
+                <p className="text-[11px] text-black">AI-powered answers from your governance documents</p>
               </div>
               <Badge variant="default" className="ml-auto text-[10px]">RAG-Powered</Badge>
             </div>
@@ -98,7 +98,7 @@ export default function AIAssistant() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}
-                  className="pr-4 h-11 rounded-xl border-primary/20 bg-background/80 shadow-inner focus-visible:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)]"
+                  className="pr-4 h-11 rounded-xl border-primary/20 bg-background/80 shadow-inner text-black placeholder:text-black/50 focus-visible:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)]"
                 />
               </div>
               <Button type="submit" size="icon" className="shrink-0 h-11 w-11 rounded-xl" disabled={isLoading}>
@@ -115,9 +115,9 @@ export default function AIAssistant() {
           <div className="space-y-4">
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
-                <Bot className="h-12 w-12 text-muted-foreground/20" />
-                <p className="text-sm text-black/60">Ask questions about your governance documents</p>
-                <p className="text-xs text-black/40">AI searches through all indexed documents to find relevant answers with citations</p>
+                <Bot className="h-12 w-12 text-black/30" />
+                <p className="text-sm text-black">Ask questions about your governance documents</p>
+                <p className="text-xs text-black">AI searches through all indexed documents to find relevant answers with citations</p>
               </div>
             )}
             <AnimatePresence>
@@ -165,7 +165,7 @@ export default function AIAssistant() {
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
                     <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
                   </div>
-                  <div className="inline-block rounded-lg px-4 py-3 text-sm bg-secondary text-black/60">
+                  <div className="inline-block rounded-lg px-4 py-3 text-sm bg-secondary text-black">
                     Searching documents and generating response…
                   </div>
                 </motion.div>
@@ -176,7 +176,7 @@ export default function AIAssistant() {
         </ScrollArea>
       </div>
 
-      <p className="text-[11px] text-black/50 mt-3 text-center">
+      <p className="text-[11px] text-black mt-3 text-center">
         AI answers are sourced exclusively from indexed documents with citations.
       </p>
     </div>
