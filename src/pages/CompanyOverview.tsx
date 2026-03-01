@@ -71,7 +71,11 @@ export default function CompanyOverview() {
           <TableBody>
             {capTable.map((row, i) => (
               <TableRow key={row.name}>
-                <TableCell className={cn("font-medium", row.isCurrentUser && "text-primary")}>{row.name}</TableCell>
+                <TableCell className={cn("font-medium", row.isCurrentUser && "text-primary")}>
+                  <a href="#" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-primary hover:underline">
+                    {row.name} <ExternalLink className="h-3 w-3" />
+                  </a>
+                </TableCell>
                 <TableCell className="text-muted-foreground">{row.date ?? "—"}</TableCell>
                 <TableCell className="text-right">{row.tokens?.toLocaleString() ?? "—"}</TableCell>
                 <TableCell className={cn("text-right font-semibold", row.isCurrentUser ? "text-primary" : "text-status-success")}>{row.percent.toFixed(2)}</TableCell>
