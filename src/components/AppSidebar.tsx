@@ -16,7 +16,8 @@ import {
   LogOut,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Sidebar,
   SidebarContent,
@@ -56,6 +57,16 @@ const adminNav = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const displayName = profile?.full_name || user?.email || "User";
+  const initials = displayName.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/login");
+  };
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
 
@@ -124,16 +135,19 @@ export function AppSidebar() {
       <SidebarFooter className="p-3 space-y-2">
         <div className="flex items-center gap-3 rounded-md bg-sidebar-accent/60 p-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
-            MC
+            {initials}
           </div>
           {!collapsed && (
             <div className="flex flex-1 flex-col">
-              <span className="text-xs font-medium text-sidebar-foreground">Maria Chen</span>
+              <span className="text-xs font-medium text-sidebar-foreground">{displayName}</span>
               <span className="text-[11px] text-sidebar-muted">Shareholder</span>
             </div>
           )}
         </div>
-        <button className="flex items-center gap-2 w-full rounded-md px-2 py-2 text-orange-500 hover:bg-orange-500/10 transition-colors text-sm font-medium">
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-2 w-full rounded-md px-2 py-2 text-orange-500 hover:bg-orange-500/10 transition-colors text-sm font-medium"
+        >
           <LogOut className="h-4 w-4" />
           {!collapsed && <span>Sign Out</span>}
         </button>
