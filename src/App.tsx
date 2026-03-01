@@ -46,7 +46,7 @@ const App = () => (
               <Route path="/admin/ownership" element={<AdminPlaceholder />} />
               <Route path="/admin/valuations" element={<AdminPlaceholder />} />
               <Route path="/admin/portfolio" element={<AdminPlaceholder />} />
-              <Route path="/admin/ai" element={<AdminPlaceholder />} />
+              <Route path="/admin/ai" element={<AIAssistant />} />
               <Route path="/admin/audit" element={<AdminPlaceholder />} />
               <Route path="/admin/settings" element={<AdminPlaceholder />} />
             </Route>
