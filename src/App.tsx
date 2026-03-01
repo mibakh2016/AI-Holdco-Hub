@@ -18,6 +18,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminPlaceholder from "./pages/AdminPlaceholder";
 import AdminShareholders from "./pages/AdminShareholders";
 import AdminDocuments from "./pages/AdminDocuments";
+import AdminPortfolio from "./pages/AdminPortfolio";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,7 +46,7 @@ const App = () => (
               <Route path="/admin/shareholders" element={<AdminShareholders />} />
               <Route path="/admin/ownership" element={<AdminPlaceholder />} />
               <Route path="/admin/valuations" element={<AdminPlaceholder />} />
-              <Route path="/admin/portfolio" element={<AdminPlaceholder />} />
+              <Route path="/admin/portfolio" element={<AdminPortfolio />} />
               <Route path="/admin/ai" element={<AIAssistant />} />
               <Route path="/admin/audit" element={<AdminPlaceholder />} />
               <Route path="/admin/settings" element={<AdminPlaceholder />} />
