@@ -113,6 +113,7 @@ export default function AdminShareholders() {
           <TableHeader>
             <TableRow>
               <TableHead className="text-label">Name</TableHead>
+              <TableHead className="text-label">Type</TableHead>
               <TableHead className="text-label">Email</TableHead>
               <TableHead className="text-label text-right">Units</TableHead>
               <TableHead className="text-label text-right">Ownership %</TableHead>
@@ -125,14 +126,14 @@ export default function AdminShareholders() {
             {isLoading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <TableRow key={i}>
-                  {Array.from({ length: 7 }).map((_, j) => (
+                  {Array.from({ length: 8 }).map((_, j) => (
                     <TableCell key={j}><div className="skeleton h-4 w-full" /></TableCell>
                   ))}
                 </TableRow>
               ))
             ) : filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
                   {search ? "No shareholders match your search." : "No shareholders yet. Add one to get started."}
                 </TableCell>
               </TableRow>
@@ -140,6 +141,7 @@ export default function AdminShareholders() {
               filtered.map((s) => (
                 <TableRow key={s.id}>
                   <TableCell className="font-medium text-table">{s.full_name}</TableCell>
+                  <TableCell className="text-table capitalize">{(s as any).shareholder_type || "individual"}</TableCell>
                   <TableCell className="text-table">{s.email}</TableCell>
                   <TableCell className="text-table text-right">{s.units.toLocaleString()}</TableCell>
                   <TableCell className="text-table text-right">{Number(s.ownership_percent).toFixed(2)}%</TableCell>
