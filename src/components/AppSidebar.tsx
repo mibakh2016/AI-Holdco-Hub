@@ -88,7 +88,7 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/dashboard" || item.url === "/admin"}
-                      className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors rounded-md text-[13px]"
+                      className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:font-semibold transition-colors rounded-md text-[13px]"
                       activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium border-l-[3px] border-primary"
                     >
                       <item.icon className="mr-2 h-4 w-4 shrink-0" />
