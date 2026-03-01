@@ -17,10 +17,10 @@ export const holdingCompany = {
 
 export const shareholderData = {
   ownershipPercent: 4.25,
-  totalValue: 2_061_250,
-  previousValue: 1_785_000,
+  totalValue: 20_600,
+  previousValue: 17_850,
   investmentDate: "2024-03-15",
-  totalInvested: 1_500_000,
+  totalInvested: 15_000,
 };
 
 export const holdings = [
