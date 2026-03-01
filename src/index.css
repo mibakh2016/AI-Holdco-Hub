@@ -165,7 +165,7 @@
     box-shadow: var(--shadow-md);
   }
   .stat-value {
-    @apply text-[28px] font-bold tracking-tight leading-none;
+    @apply text-xl font-bold tracking-tight leading-none;
     font-family: 'Inter', system-ui, sans-serif;
   }
   .gradient-text {
