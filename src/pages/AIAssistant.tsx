@@ -86,7 +86,7 @@ export default function AIAssistant() {
               </div>
               <div>
                 <p className="text-lg font-semibold text-black">Assistant</p>
-                <p className="text-sm text-black">AI-powered answers from your company info</p>
+                <p className="text-sm text-black">AI-powered answers from your company info, portfolio holdings and fin docs.</p>
               </div>
               <Badge variant="default" className="ml-auto text-sm px-3 py-1">RAG-Powered</Badge>
             </div>
