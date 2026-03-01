@@ -17,12 +17,26 @@ interface PurchaseRequest {
 }
 
 export default function Dashboard() {
-  const { data: holdingsValue = 0 } = useQuery({
-    queryKey: ["holdings-value"],
+  const { data: myHoldingsValue = 0 } = useQuery({
+    queryKey: ["my-holdings-value"],
     queryFn: async () => {
-      const { data } = await supabase.from("portfolio_entities").select("valuation_amount") as any;
-      return ((data as { valuation_amount: number }[]) ?? [])
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return 0;
+
+      // Get total holdings value
+      const { data: entities } = await supabase.from("portfolio_entities").select("valuation_amount") as any;
+      const totalValue = ((entities as { valuation_amount: number }[]) ?? [])
         .reduce((sum: number, e: { valuation_amount: number }) => sum + (e.valuation_amount ?? 0), 0);
+
+      // Get this user's ownership percent
+      const { data: shareholder } = await supabase
+        .from("shareholders")
+        .select("ownership_percent")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      const ownershipPercent = shareholder?.ownership_percent ?? 0;
+      return totalValue * (ownershipPercent / 100);
     },
   });
   const [purchases, setPurchases] = useState<PurchaseRequest[]>([]);
@@ -71,8 +85,8 @@ export default function Dashboard() {
           <p className="text-3xl font-bold tracking-tight text-foreground">{shareholderData.ownershipPercent}%</p>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }}>
-          <p className="text-sm font-medium text-foreground mb-1.5">Holdings Value</p>
-          <p className="text-3xl font-bold tracking-tight text-foreground">{formatCurrency(holdingsValue)}</p>
+          <p className="text-sm font-medium text-foreground mb-1.5">My Holdings Value</p>
+          <p className="text-3xl font-bold tracking-tight text-foreground">{formatCurrency(myHoldingsValue)}</p>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
           <p className="text-sm font-medium text-foreground mb-1.5">Total Invested</p>
