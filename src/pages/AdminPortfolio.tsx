@@ -183,7 +183,7 @@ export default function AdminPortfolio() {
               </TableHeader>
               <TableBody>
                 {entities.map((entity) => (
-                  <TableRow key={entity.id}>
+                  <TableRow key={entity.id} className="text-black">
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{entity.name}</span>
@@ -194,23 +194,23 @@ export default function AdminPortfolio() {
                         )}
                       </div>
                       {entity.description && (
-                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{entity.description}</p>
+                        <p className="text-xs text-black mt-0.5 line-clamp-1">{entity.description}</p>
                       )}
                     </TableCell>
                     <TableCell>
                       {entity.sector ? (
                         <Badge variant="outline" className="text-xs">{entity.sector}</Badge>
                       ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
+                        <span className="text-xs text-black">—</span>
                       )}
                     </TableCell>
-                    <TableCell className="font-semibold">{entity.stake_percent}%</TableCell>
+                    <TableCell className="font-semibold text-black">{entity.stake_percent}%</TableCell>
                     <TableCell>
                       <Badge className={`text-xs ${statusColor(entity.status)}`}>
                         {entity.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground max-w-[200px] truncate">
+                    <TableCell className="text-sm text-black max-w-[200px] truncate">
                       {entity.latest_milestone || "—"}
                     </TableCell>
                     <TableCell className="text-right">
