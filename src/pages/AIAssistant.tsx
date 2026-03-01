@@ -71,7 +71,7 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 h-[calc(100vh-8rem)] max-w-4xl mx-auto">
+    <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] max-w-3xl mx-auto">
       {/* Glowing search header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
