@@ -1,15 +1,31 @@
 
 
-## Plan: Make Shareholders Table Text Black
+## Auto-Categorization After Document Upload
 
-The table text currently uses muted/gray colors from the design system. The fix is straightforward:
+### What it does
+After a PDF is successfully uploaded, the system will automatically analyze the document's filename and send it to an AI-powered backend function that categorizes it into one of the governance document types (e.g., "subscription_agreement", "board_resolution", "financial_report", "shareholder_agreement", "bylaws", "operating_agreement", "annual_report", "tax_document", "general"). The result is written back to the `documents` table and displayed to the user in a post-upload confirmation card.
 
-**File: `src/pages/AdminShareholders.tsx`**
-- Remove `text-muted-foreground` classes from table cells (email, joined date)
-- Update the `text-table` utility or add `text-foreground` to all `TableCell` elements so text renders in black/dark color
+### Implementation Steps
 
-**File: `src/index.css`**
-- Update the `.text-table` utility class to use `color: hsl(var(--foreground))` instead of inheriting the muted paragraph color from the base `p, td, th` rule
+**1. Create an edge function `categorize-document`**
+- Receives the document ID and filename/title
+- Calls Lovable AI (Gemini Flash) with a prompt asking it to classify the document based on its title/filename into a predefined category list
+- Uses tool calling to extract structured output: `{ category: string, confidence: string }`
+- Updates the `documents` row with the returned `document_type`
+- Returns the category to the frontend
 
-This will make all table content use the primary dark foreground color instead of the muted gray.
+**2. Update `AdminDocuments.tsx` frontend**
+- After successful upload + DB insert, call the `categorize-document` edge function with the new document's ID and title
+- Show a post-upload state with a spinner ("Categorizing...") followed by the assigned category displayed in a badge/card
+- Handle errors gracefully (if categorization fails, document stays as "general" and user sees a note)
+
+**3. No database schema changes needed**
+- The `document_type` column already exists on the `documents` table as a text field, currently defaulting to `"general"`. The AI will update it to a more specific value.
+
+### Technical Details
+
+- **AI model**: `google/gemini-3-flash-preview` via Lovable AI gateway
+- **Edge function**: `supabase/functions/categorize-document/index.ts` -- uses `LOVABLE_API_KEY` (already configured) and `SUPABASE_URL` + service role key to update the document row server-side
+- **Categories**: subscription_agreement, board_resolution, financial_report, shareholder_agreement, bylaws, operating_agreement, annual_report, tax_document, meeting_minutes, general
+- **UI flow**: Upload button -> "Uploading..." -> success -> "Categorizing..." spinner -> category badge with result
 
