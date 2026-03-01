@@ -25,7 +25,7 @@ export default function CompanyOverview() {
         </div>
         <p className="text-sm text-foreground leading-relaxed">{holdingCompany.description}</p>
         <p className="text-sm font-semibold text-foreground">
-          Token Price – <span className="text-primary">{fmtPrice(holdingCompany.unitPrice)}</span>
+          Unit Price – <span className="text-primary">{fmtPrice(holdingCompany.unitPrice)}</span>
         </p>
         <div className="flex items-center gap-3 pt-1">
           <Button variant="outline" size="sm" className="gap-2 text-xs" asChild>
