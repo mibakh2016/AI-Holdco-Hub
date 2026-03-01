@@ -4,7 +4,11 @@ import { CreditCard, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { holdingCompany } from "@/lib/mock-data";
+import { holdingCompany, currentUser } from "@/lib/mock-data";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose,
+} from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const unitPrice = holdingCompany.unitPrice;
 const blockSizes = [2, 4, 10];
@@ -15,8 +19,39 @@ const fmt = (v: number) =>
 export default function BuyShares() {
   const [selected, setSelected] = useState<number>(0);
   const [agreed, setAgreed] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const { toast } = useToast();
 
   const totalCost = blockSizes[selected] * unitPrice;
+
+  const handleSubmit = () => {
+    setConfirmOpen(false);
+    setSubmitted(true);
+    toast({
+      title: "Purchase request submitted",
+      description: `Your request for ${blockSizes[selected]} units (${fmt(totalCost)}) has been sent for admin approval.`,
+    });
+  };
+
+  if (submitted) {
+    return (
+      <div className="max-w-4xl">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="glass-card rounded-lg p-10 text-center space-y-4">
+          <CheckCircle2 className="h-16 w-16 text-primary mx-auto" />
+          <h2 className="font-bold text-xl">Purchase Request Submitted</h2>
+          <p className="text-muted-foreground text-sm max-w-md mx-auto">
+            Your request for <span className="font-semibold text-foreground">{blockSizes[selected]} units</span> at{" "}
+            <span className="font-semibold text-foreground">{fmt(totalCost)}</span> has been submitted and is pending admin approval.
+            You'll be notified once it's processed.
+          </p>
+          <Button variant="outline" onClick={() => { setSubmitted(false); setAgreed(false); }}>
+            Make Another Purchase
+          </Button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -111,10 +146,46 @@ export default function BuyShares() {
         </div>
       </motion.div>
 
-      <Button disabled={!agreed} className="gap-2 w-full sm:w-auto" size="lg">
+      <Button disabled={!agreed} className="gap-2 w-full sm:w-auto" size="lg" onClick={() => setConfirmOpen(true)}>
         <CreditCard className="h-4 w-4" />
         Proceed to Checkout — {fmt(totalCost)}
       </Button>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Purchase</DialogTitle>
+            <DialogDescription>Please review your purchase details before submitting.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Buyer:</span>
+              <span className="font-medium">{currentUser.name}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Units:</span>
+              <span className="font-medium">{blockSizes[selected]}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Price per unit:</span>
+              <span className="font-medium">{fmt(unitPrice)}</span>
+            </div>
+            <div className="flex justify-between font-bold text-base border-t pt-3">
+              <span>Total:</span>
+              <span>{fmt(totalCost)}</span>
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button onClick={handleSubmit}>
+              <CheckCircle2 className="h-4 w-4 mr-1" /> Confirm Purchase
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
