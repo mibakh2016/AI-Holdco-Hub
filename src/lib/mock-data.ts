@@ -27,10 +27,10 @@ export const holdings = [
   {
     id: "trn_001",
     date: "2024-03-15",
-    units: 425,
+    units: 25,
     percent: 2.5,
-    paidPrice: 850_000,
-    currentValue: 1_212_500,
+    paidPrice: 8_500,
+    currentValue: 12_125,
     documents: [
       { id: "doc_001", name: "Subscription Agreement — Series A", type: "Subscription Agreement", date: "2024-03-15" },
       { id: "doc_002", name: "Side Letter — Maria Chen", type: "Side Letter", date: "2024-03-15" },
@@ -39,10 +39,10 @@ export const holdings = [
   {
     id: "trn_002",
     date: "2024-11-01",
-    units: 175,
+    units: 10,
     percent: 1.75,
-    paidPrice: 650_000,
-    currentValue: 848_750,
+    paidPrice: 6_500,
+    currentValue: 8_475,
     documents: [
       { id: "doc_003", name: "Subscription Agreement — Series B", type: "Subscription Agreement", date: "2024-11-01" },
     ],
