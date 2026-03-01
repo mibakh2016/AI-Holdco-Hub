@@ -12,17 +12,17 @@ export default function AdminDashboard() {
   const { data: stats, isLoading } = useQuery({
     queryKey: ["admin-dashboard-stats"],
     queryFn: async () => {
-      const [shareholdersRes, documentsRes, valuationsRes, pendingRes] = await Promise.all([
+      const [shareholdersRes, documentsRes, holdingsRes] = await Promise.all([
         supabase.from("shareholders").select("id", { count: "exact", head: true }),
         supabase.from("documents").select("id", { count: "exact", head: true }),
-        supabase.from("valuations").select("total_valuation").order("valuation_date", { ascending: false }).limit(1),
-        supabase.from("purchase_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("portfolio_entities").select("valuation_amount") as any,
       ]);
+      const holdingsValue = ((holdingsRes.data as { valuation_amount: number }[]) ?? [])
+        .reduce((sum: number, e: { valuation_amount: number }) => sum + (e.valuation_amount ?? 0), 0);
       return {
         totalShareholders: shareholdersRes.count ?? 0,
         documentsIndexed: documentsRes.count ?? 0,
-        latestValuation: valuationsRes.data?.[0]?.total_valuation ?? 0,
-        pendingApprovals: pendingRes.count ?? 0,
+        holdingsValue,
       };
     },
   });
@@ -42,7 +42,7 @@ export default function AdminDashboard() {
         <div className="grid gap-sp-4 sm:grid-cols-2 lg:grid-cols-3">
           <StatCard label="Total Shareholders" value={(stats?.totalShareholders ?? 0).toString()} icon={Users} delay={0} />
           <StatCard label="Documents Indexed" value={(stats?.documentsIndexed ?? 0).toString()} icon={FileText} delay={0.04} />
-          <StatCard label="Holdings Value" value={fmt(2500000)} icon={DollarSign} delay={0.08} />
+          <StatCard label="Holdings Value" value={fmt(stats?.holdingsValue ?? 0)} icon={DollarSign} delay={0.08} />
         </div>
       )}
     </div>

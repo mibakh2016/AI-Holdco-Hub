@@ -2,13 +2,10 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { shareholderData } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 const formatCurrency = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v);
-
-const changePercent = (
-  ((shareholderData.totalValue - shareholderData.previousValue) / shareholderData.previousValue) * 100
-).toFixed(1);
 
 interface PurchaseRequest {
   id: string;
@@ -20,6 +17,14 @@ interface PurchaseRequest {
 }
 
 export default function Dashboard() {
+  const { data: holdingsValue = 0 } = useQuery({
+    queryKey: ["holdings-value"],
+    queryFn: async () => {
+      const { data } = await supabase.from("portfolio_entities").select("valuation_amount") as any;
+      return ((data as { valuation_amount: number }[]) ?? [])
+        .reduce((sum: number, e: { valuation_amount: number }) => sum + (e.valuation_amount ?? 0), 0);
+    },
+  });
   const [purchases, setPurchases] = useState<PurchaseRequest[]>([]);
 
   useEffect(() => {
@@ -67,8 +72,7 @@ export default function Dashboard() {
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }}>
           <p className="text-sm font-medium text-foreground mb-1.5">Holdings Value</p>
-          <p className="text-3xl font-bold tracking-tight text-foreground">{formatCurrency(shareholderData.totalValue)}</p>
-          <p className="text-sm text-status-success font-medium mt-1.5">+{changePercent}% from last quarter</p>
+          <p className="text-3xl font-bold tracking-tight text-foreground">{formatCurrency(holdingsValue)}</p>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
           <p className="text-sm font-medium text-foreground mb-1.5">Total Invested</p>
