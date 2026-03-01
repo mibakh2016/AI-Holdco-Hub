@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-import { Search, Download, Trash2, FileText } from "lucide-react";
+import { Search, Download, Trash2, FileText, ClipboardCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +40,11 @@ function formatFileSize(bytes: number | null) {
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 }
 
-export default function DocumentLibrary() {
+interface DocumentLibraryProps {
+  onReviewDocument?: (id: string) => void;
+}
+
+export default function DocumentLibrary({ onReviewDocument }: DocumentLibraryProps) {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -163,6 +167,16 @@ export default function DocumentLibrary() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
+                      {doc.status === "pending" && onReviewDocument && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 text-xs"
+                          onClick={() => onReviewDocument(doc.id)}
+                        >
+                          <ClipboardCheck className="h-3 w-3 mr-1" /> Review
+                        </Button>
+                      )}
                       {doc.file_url && (
                         <Button
                           variant="ghost"
