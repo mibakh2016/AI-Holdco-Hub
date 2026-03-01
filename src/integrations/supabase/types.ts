@@ -111,45 +111,88 @@ export type Database = {
       }
       documents: {
         Row: {
+          ai_suggested_metadata: Json | null
+          confirmed_at: string | null
           created_at: string
           description: string | null
           document_type: string
+          effective_date: string | null
+          entity_id: string | null
           file_name: string | null
           file_size: number | null
           file_url: string | null
           id: string
+          processing_status: string | null
+          shareholder_id: string | null
           status: string
           title: string
           updated_at: string
           uploaded_by: string | null
+          valuation_id: string | null
         }
         Insert: {
+          ai_suggested_metadata?: Json | null
+          confirmed_at?: string | null
           created_at?: string
           description?: string | null
           document_type?: string
+          effective_date?: string | null
+          entity_id?: string | null
           file_name?: string | null
           file_size?: number | null
           file_url?: string | null
           id?: string
+          processing_status?: string | null
+          shareholder_id?: string | null
           status?: string
           title: string
           updated_at?: string
           uploaded_by?: string | null
+          valuation_id?: string | null
         }
         Update: {
+          ai_suggested_metadata?: Json | null
+          confirmed_at?: string | null
           created_at?: string
           description?: string | null
           document_type?: string
+          effective_date?: string | null
+          entity_id?: string | null
           file_name?: string | null
           file_size?: number | null
           file_url?: string | null
           id?: string
+          processing_status?: string | null
+          shareholder_id?: string | null
           status?: string
           title?: string
           updated_at?: string
           uploaded_by?: string | null
+          valuation_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "documents_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_shareholder_id_fkey"
+            columns: ["shareholder_id"]
+            isOneToOne: false
+            referencedRelation: "shareholders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_valuation_id_fkey"
+            columns: ["valuation_id"]
+            isOneToOne: false
+            referencedRelation: "valuations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ownership_register: {
         Row: {
