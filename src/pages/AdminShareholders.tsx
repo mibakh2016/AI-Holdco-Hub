@@ -62,7 +62,7 @@ export default function AdminShareholders() {
   );
 
   const totalUnits = shareholders.reduce((a, s) => a + s.units, 0);
-  const totalOwnership = shareholders.reduce((a, s) => a + Number(s.ownership_percent), 0);
+  
   const activeCount = shareholders.filter((s) => s.status === "active").length;
 
   return (
@@ -76,7 +76,7 @@ export default function AdminShareholders() {
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard label="Total Shareholders" value={shareholders.length.toString()} icon={Users} delay={0} />
         <StatCard label="Active Shareholders" value={activeCount.toString()} icon={Users} delay={0.04} />
-        <StatCard label="Total Ownership" value={`${totalOwnership.toFixed(2)}%`} icon={Users} delay={0.08} />
+        <StatCard label="Total Units" value={totalUnits.toLocaleString()} icon={Users} delay={0.08} />
       </div>
 
       {/* Toolbar */}
