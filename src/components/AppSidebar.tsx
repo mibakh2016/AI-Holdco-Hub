@@ -34,7 +34,7 @@ import {
 const shareholderNav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "My Holdings", url: "/holdings", icon: Briefcase },
-  { title: "Company Overview", url: "/company", icon: Building2 },
+  { title: "Company Info", url: "/company", icon: Building2 },
   { title: "AI Assistant", url: "/ai-assistant", icon: Bot },
   { title: "Portfolio Ventures", url: "/portfolio", icon: FolderOpen },
   { title: "Buy Share Units", url: "/buy-shares", icon: ShoppingCart },
