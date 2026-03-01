@@ -60,10 +60,10 @@ export function AppSidebar() {
   const isAdmin = location.pathname.startsWith("/admin");
 
   return (
-    <Sidebar collapsible="icon" className="border-r-0">
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="p-sp-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary text-xs font-bold text-sidebar-primary-foreground">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
             BV
           </div>
           {!collapsed && (
@@ -89,7 +89,7 @@ export function AppSidebar() {
                       to={item.url}
                       end={item.url === "/dashboard" || item.url === "/admin"}
                       className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors rounded-md text-[13px]"
-                      activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                      activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium border-l-[3px] border-primary"
                     >
                       <item.icon className="mr-2 h-4 w-4 shrink-0" />
                       {!collapsed && <span>{item.title}</span>}
@@ -123,7 +123,7 @@ export function AppSidebar() {
 
       <SidebarFooter className="p-3 space-y-2">
         <div className="flex items-center gap-3 rounded-md bg-sidebar-accent/60 p-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sidebar-primary text-[11px] font-bold text-sidebar-primary-foreground">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
             MC
           </div>
           {!collapsed && (
