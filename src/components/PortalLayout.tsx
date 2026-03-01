@@ -25,7 +25,7 @@ const pageTitles: Record<string, string> = {
 
 export default function PortalLayout() {
   const location = useLocation();
-  const title = pageTitles[location.pathname] || "Board Vault";
+  const title = pageTitles[location.pathname] || "AI Holdco Hub";
 
   return (
     <SidebarProvider>
@@ -51,7 +51,7 @@ export default function PortalLayout() {
           </main>
           <footer className="border-t bg-card px-sp-6 py-4 text-center text-xs text-muted-foreground">
             <p className="max-w-2xl mx-auto leading-relaxed">
-              By using the Vault Platform (Platform) you acknowledge and agree that the data and documents produced by the Platform may not be suitable for your specific situation and that you should seek professional legal advice. You disclaim and indemnify Vault for any loss sustained as a result of using the Platform. You can view our Software{" "}
+              By using the AI Holdco Hub Platform (Platform) you acknowledge and agree that the data and documents produced by the Platform may not be suitable for your specific situation and that you should seek professional legal advice. You disclaim and indemnify AI Holdco Hub for any loss sustained as a result of using the Platform. You can view our Software{" "}
               <a href="/terms" className="underline hover:text-foreground transition-colors">Terms of use here</a>
               {" "}and our{" "}
               <a href="/privacy" className="underline hover:text-foreground transition-colors">Privacy policy here</a>.
