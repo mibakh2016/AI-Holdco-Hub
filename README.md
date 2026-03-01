@@ -1,5 +1,3 @@
-# Welcome to the project
-
 ## Project info
 
 **URL**: https://AI-Hodco-Hub.com
