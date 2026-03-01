@@ -153,10 +153,10 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-weight: 600;
     letter-spacing: -0.02em;
-    color: hsl(0 0% 0%);
+    color: hsl(var(--foreground));
   }
   p, li, td, th {
-    color: hsl(240 12% 40%);
+    color: hsl(var(--muted-foreground));
   }
 }
 
