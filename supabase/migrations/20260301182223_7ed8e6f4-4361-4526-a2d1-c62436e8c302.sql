@@ -1,0 +1,1 @@
+ALTER TABLE public.shareholders ADD COLUMN shareholder_type text NOT NULL DEFAULT 'individual';
