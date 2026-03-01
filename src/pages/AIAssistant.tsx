@@ -114,7 +114,6 @@ export default function AIAssistant() {
           <div className="space-y-4">
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
-                <Bot className="h-12 w-12 text-black/30" />
                 <p className="text-sm text-black">Ask questions about your company info</p>
                 <p className="text-xs text-black">AI searches through all indexed documents to find relevant answers with citations</p>
               </div>
