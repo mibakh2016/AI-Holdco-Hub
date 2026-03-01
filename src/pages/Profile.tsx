@@ -57,7 +57,8 @@ export default function Profile() {
           </div>
           <div className="space-y-1.5">
             <Label className="text-label">Email</Label>
-            <Input defaultValue={currentUser.email} type="email" />
+            <Input defaultValue={currentUser.email} type="email" disabled className="opacity-60" />
+            <p className="text-xs text-muted-foreground">Only an admin can change your email</p>
           </div>
           <div className="space-y-1.5">
             <Label className="text-label">Phone</Label>
