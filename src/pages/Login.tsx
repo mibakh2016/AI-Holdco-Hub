@@ -73,13 +73,7 @@ export default function Login() {
         transition={{ duration: 0.45 }}
         className="w-full max-w-[400px] space-y-8"
       >
-        {/* Logo */}
-        <div className="text-center space-y-1">
-          <div className="flex items-center justify-center gap-2.5 mb-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary font-display text-sm font-bold text-primary-foreground">
-              BV
-            </div>
-          </div>
+        <div className="text-center">
           <h1 className="font-display text-[22px] font-bold tracking-tight text-foreground">
             Board Vault
           </h1>
