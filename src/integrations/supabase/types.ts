@@ -268,6 +268,7 @@ export type Database = {
           joined_date: string
           ownership_percent: number
           phone: string | null
+          shareholder_type: string
           status: string
           units: number
           updated_at: string
@@ -281,6 +282,7 @@ export type Database = {
           joined_date?: string
           ownership_percent?: number
           phone?: string | null
+          shareholder_type?: string
           status?: string
           units?: number
           updated_at?: string
@@ -294,6 +296,7 @@ export type Database = {
           joined_date?: string
           ownership_percent?: number
           phone?: string | null
+          shareholder_type?: string
           status?: string
           units?: number
           updated_at?: string

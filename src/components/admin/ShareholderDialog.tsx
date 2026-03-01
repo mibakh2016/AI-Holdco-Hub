@@ -21,6 +21,7 @@ import type { Tables } from "@/integrations/supabase/types";
 type Shareholder = Tables<"shareholders">;
 
 const schema = z.object({
+  shareholder_type: z.enum(["individual", "company"]),
   full_name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
   phone: z.string().optional(),
@@ -44,6 +45,7 @@ export default function ShareholderDialog({ open, onOpenChange, shareholder }: P
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
+      shareholder_type: "individual",
       full_name: "",
       email: "",
       phone: "",
@@ -56,6 +58,7 @@ export default function ShareholderDialog({ open, onOpenChange, shareholder }: P
   useEffect(() => {
     if (shareholder) {
       form.reset({
+        shareholder_type: (shareholder as any).shareholder_type || "individual",
         full_name: shareholder.full_name,
         email: shareholder.email,
         phone: shareholder.phone || "",
@@ -65,6 +68,7 @@ export default function ShareholderDialog({ open, onOpenChange, shareholder }: P
       });
     } else {
       form.reset({
+        shareholder_type: "individual",
         full_name: "",
         email: "",
         phone: "",
@@ -78,6 +82,7 @@ export default function ShareholderDialog({ open, onOpenChange, shareholder }: P
   const mutation = useMutation({
     mutationFn: async (values: FormValues) => {
       const payload = {
+        shareholder_type: values.shareholder_type,
         full_name: values.full_name,
         email: values.email,
         phone: values.phone || null,
@@ -112,6 +117,25 @@ export default function ShareholderDialog({ open, onOpenChange, shareholder }: P
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit((v) => mutation.mutate(v))} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="shareholder_type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="individual">Individual</SelectItem>
+                      <SelectItem value="company">Company</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="full_name"
