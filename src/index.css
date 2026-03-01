@@ -1,91 +1,138 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ===== Cake Equity Design System ===== */
+/* Brand: Port Gore #24244F | Electric Violet #5A38FD | Electric Lime #D4F717 */
+
 @layer base {
   :root {
-    --background: 210 33% 98%;
-    --foreground: 222 47% 11%;
-
+    /* Surfaces */
+    --background: 240 20% 98%;
+    --foreground: 240 33% 23%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-
+    --card-foreground: 240 33% 23%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 240 33% 23%;
+    --surface-elevated: 0 0% 100%;
+    --surface-sunken: 240 20% 96%;
 
-    --primary: 217 72% 48%;
+    /* Brand */
+    --primary: 244 96% 60%;
     --primary-foreground: 0 0% 100%;
+    --lime: 72 91% 53%;
+    --lime-foreground: 240 33% 23%;
+    --port-gore: 240 37% 23%;
+    --port-gore-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    /* Secondary / Muted / Accent */
+    --secondary: 240 20% 96%;
+    --secondary-foreground: 240 33% 23%;
+    --muted: 240 14% 94%;
+    --muted-foreground: 240 10% 46%;
+    --accent: 244 96% 96%;
+    --accent-foreground: 244 96% 60%;
 
-    --muted: 214 32% 95%;
-    --muted-foreground: 215 16% 47%;
-
-    --accent: 168 72% 40%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
+    /* Destructive */
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 20% 92%;
-    --input: 214 20% 92%;
-    --ring: 217 72% 48%;
+    /* Borders */
+    --border: 240 14% 90%;
+    --border-strong: 240 14% 82%;
+    --input: 240 14% 90%;
+    --input-focus: 244 96% 60%;
+    --ring: 244 96% 60%;
 
-    --radius: 0.625rem;
+    --radius: 8px;
 
-    /* Custom tokens */
-    --surface-elevated: 0 0% 100%;
-    --surface-sunken: 210 33% 96%;
-    --chart-up: 158 64% 42%;
-    --chart-down: 0 84% 60%;
-    --amber: 38 92% 50%;
-    --amber-foreground: 0 0% 100%;
+    /* Status */
+    --status-success: 152 69% 40%;
+    --status-success-bg: 152 69% 95%;
+    --status-success-border: 152 69% 82%;
+    --status-warning: 38 92% 50%;
+    --status-warning-bg: 38 92% 95%;
+    --status-warning-border: 38 92% 80%;
+    --status-error: 0 72% 51%;
+    --status-error-bg: 0 72% 96%;
+    --status-error-border: 0 72% 82%;
 
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 214 32% 91%;
-    --sidebar-primary: 217 72% 60%;
+    /* Chart */
+    --chart-up: 152 69% 40%;
+    --chart-down: 0 72% 51%;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(36, 36, 79, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(36, 36, 79, 0.07), 0 2px 4px -2px rgba(36, 36, 79, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(36, 36, 79, 0.08), 0 4px 6px -4px rgba(36, 36, 79, 0.04);
+    --shadow-focus: 0 0 0 3px rgba(90, 56, 253, 0.15);
+
+    /* Sidebar — Port Gore dark */
+    --sidebar-background: 240 37% 23%;
+    --sidebar-foreground: 240 20% 90%;
+    --sidebar-primary: 244 96% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 40% 18%;
+    --sidebar-accent: 240 30% 30%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 222 30% 20%;
-    --sidebar-ring: 217 72% 60%;
-    --sidebar-muted: 215 16% 57%;
+    --sidebar-border: 240 25% 32%;
+    --sidebar-ring: 244 96% 60%;
+    --sidebar-muted: 240 14% 60%;
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 96%;
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 96%;
-    --popover: 222 47% 9%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 217 72% 56%;
+    --background: 240 33% 7%;
+    --foreground: 240 14% 92%;
+    --card: 240 33% 10%;
+    --card-foreground: 240 14% 92%;
+    --popover: 240 33% 10%;
+    --popover-foreground: 240 14% 92%;
+    --surface-elevated: 240 33% 12%;
+    --surface-sunken: 240 33% 5%;
+    --primary: 244 96% 65%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 168 72% 40%;
-    --accent-foreground: 0 0% 100%;
+    --lime: 72 91% 53%;
+    --lime-foreground: 240 33% 10%;
+    --port-gore: 240 37% 23%;
+    --port-gore-foreground: 0 0% 100%;
+    --secondary: 240 25% 15%;
+    --secondary-foreground: 240 14% 92%;
+    --muted: 240 25% 15%;
+    --muted-foreground: 240 14% 60%;
+    --accent: 244 50% 18%;
+    --accent-foreground: 244 96% 75%;
     --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 96%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 213 27% 84%;
-    --surface-elevated: 222 47% 12%;
-    --surface-sunken: 222 47% 5%;
-    --sidebar-background: 222 47% 6%;
-    --sidebar-foreground: 214 32% 91%;
-    --sidebar-primary: 217 72% 60%;
+    --destructive-foreground: 240 14% 92%;
+    --border: 240 25% 18%;
+    --border-strong: 240 25% 25%;
+    --input: 240 25% 18%;
+    --input-focus: 244 96% 65%;
+    --ring: 244 96% 65%;
+    --status-success: 152 69% 45%;
+    --status-success-bg: 152 30% 14%;
+    --status-success-border: 152 40% 25%;
+    --status-warning: 38 80% 55%;
+    --status-warning-bg: 38 30% 14%;
+    --status-warning-border: 38 40% 25%;
+    --status-error: 0 63% 45%;
+    --status-error-bg: 0 30% 14%;
+    --status-error-border: 0 40% 25%;
+    --chart-up: 152 69% 45%;
+    --chart-down: 0 63% 45%;
+    --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.4), 0 4px 6px -4px rgba(0,0,0,0.2);
+    --shadow-focus: 0 0 0 3px rgba(90, 56, 253, 0.3);
+    --sidebar-background: 240 33% 7%;
+    --sidebar-foreground: 240 14% 85%;
+    --sidebar-primary: 244 96% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 40% 12%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 222 30% 14%;
-    --sidebar-ring: 217 72% 60%;
-    --sidebar-muted: 215 16% 57%;
+    --sidebar-accent: 240 25% 15%;
+    --sidebar-accent-foreground: 240 14% 92%;
+    --sidebar-border: 240 25% 18%;
+    --sidebar-ring: 244 96% 65%;
+    --sidebar-muted: 240 14% 50%;
   }
 }
 
@@ -95,22 +142,61 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: -0.006em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 }
 
 @layer utilities {
   .glass-card {
-    @apply bg-card/80 backdrop-blur-xl border border-border/60 shadow-sm;
+    @apply bg-card border border-border rounded-lg;
+    box-shadow: var(--shadow-sm);
+  }
+  .glass-card:hover {
+    box-shadow: var(--shadow-md);
   }
   .stat-value {
-    @apply text-3xl font-bold tracking-tight;
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    @apply text-[28px] font-bold tracking-tight leading-none;
+    font-family: 'Inter', system-ui, sans-serif;
   }
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--lime)));
+  }
+  /* Spacing tokens */
+  .space-1 { gap: 4px; }
+  .space-2 { gap: 8px; }
+  .space-3 { gap: 12px; }
+  .space-4 { gap: 16px; }
+  .space-6 { gap: 24px; }
+  .space-8 { gap: 32px; }
+  .space-12 { gap: 48px; }
+  /* Typography presets */
+  .text-label {
+    @apply text-xs font-medium text-muted-foreground uppercase tracking-wider;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .text-table {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .text-body {
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: -0.006em;
+  }
+  /* Skeleton loader */
+  .skeleton {
+    @apply rounded bg-muted animate-pulse;
   }
 }

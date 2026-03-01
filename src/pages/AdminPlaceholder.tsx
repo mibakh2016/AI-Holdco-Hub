@@ -19,15 +19,15 @@ export default function AdminPlaceholder() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="flex flex-col items-center justify-center h-[60vh] text-center"
     >
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 mb-4">
-        <Construction className="h-8 w-8 text-primary" />
+      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent mb-4">
+        <Construction className="h-7 w-7 text-accent-foreground" />
       </div>
-      <h2 className="font-display text-xl font-bold mb-2">{title}</h2>
-      <p className="text-sm text-muted-foreground max-w-md">
+      <h2 className="text-lg font-bold mb-2">{title}</h2>
+      <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
         This section is ready for backend integration. Connect Lovable Cloud to enable full functionality with database, authentication, and document management.
       </p>
     </motion.div>
