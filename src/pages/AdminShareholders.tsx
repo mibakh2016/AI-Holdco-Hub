@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, Plus, Search, Pencil, Trash2, MoreHorizontal } from "lucide-react";
+import { Users, Plus, Search, Pencil, Trash2, MoreHorizontal, ExternalLink } from "lucide-react";
 import { StatCard } from "@/components/StatCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -112,7 +112,7 @@ export default function AdminShareholders() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-label">Name</TableHead>
+              <TableHead className="text-label">Name / Link</TableHead>
               <TableHead className="text-label">Type</TableHead>
               <TableHead className="text-label">Email</TableHead>
               <TableHead className="text-label text-right">Units</TableHead>
@@ -140,7 +140,12 @@ export default function AdminShareholders() {
             ) : (
               filtered.map((s) => (
                 <TableRow key={s.id}>
-                  <TableCell className="font-medium text-table">{s.full_name}</TableCell>
+                  <TableCell className="font-medium text-table">
+                    <span className="inline-flex items-center gap-1.5">
+                      {s.full_name}
+                      <ExternalLink className="h-3.5 w-3.5 text-muted-foreground hover:text-primary cursor-pointer shrink-0" />
+                    </span>
+                  </TableCell>
                   <TableCell className="text-table capitalize">{(s as any).shareholder_type || "individual"}</TableCell>
                   <TableCell className="text-table">{s.email}</TableCell>
                   <TableCell className="text-table text-right">{s.units.toLocaleString()}</TableCell>
