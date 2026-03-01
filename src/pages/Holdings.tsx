@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { holdings, holdingCompany } from "@/lib/mock-data";
 import { FileText, Download } from "lucide-react";
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
+import { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell } from "@/components/ui/table";
 
 const fmt = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v);
@@ -43,6 +43,16 @@ export default function Holdings() {
               </TableRow>
             ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={3} className="font-bold text-base">Total</TableCell>
+              <TableCell className="font-bold">{holdings.reduce((s, t) => s + t.units, 0).toLocaleString()} ({holdings.reduce((s, t) => s + t.percent, 0).toFixed(2)}%)</TableCell>
+              <TableCell className="font-bold">{fmt(holdings.reduce((s, t) => s + t.paidPrice, 0))}</TableCell>
+              <TableCell></TableCell>
+              <TableCell className="font-bold text-primary">{fmt(holdings.reduce((s, t) => s + t.currentValue, 0))}</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableFooter>
         </Table>
       </motion.div>
 
