@@ -45,7 +45,7 @@ export default function CompanyOverview() {
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }} className="glass-card rounded-lg p-sp-6">
         <div className="flex items-center gap-3 mb-4">
           <TrendingUp className="h-5 w-5 text-status-success" />
-          <h3 className="font-semibold">Current Valuation</h3>
+          <h3 className="font-semibold">Current Holdings Value</h3>
         </div>
         <p className="stat-value text-foreground">{fmt(holdingCompany.currentValuation)}</p>
         <p className="text-sm text-status-success font-medium mt-1">
