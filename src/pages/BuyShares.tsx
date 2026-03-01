@@ -114,7 +114,7 @@ export default function BuyShares() {
           Current price per Equity Unit: <span className="font-semibold text-foreground">{fmt(unitPrice)}</span>
         </p>
 
-        <h3 className="font-bold text-lg mb-3">Select Block Size</h3>
+        <h3 className="font-bold text-lg mt-6 mb-3">Select Block Size</h3>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-6">
           {blockSizes.map((units, i) => (
             <button
