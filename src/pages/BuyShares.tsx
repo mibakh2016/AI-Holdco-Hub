@@ -9,6 +9,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/supabase-client";
 
 const unitPrice = holdingCompany.unitPrice;
 const blockSizes = [2, 4, 10];
@@ -25,13 +26,29 @@ export default function BuyShares() {
 
   const totalCost = blockSizes[selected] * unitPrice;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setConfirmOpen(false);
-    setSubmitted(true);
-    toast({
-      title: "Purchase request submitted",
-      description: `Your request for ${blockSizes[selected]} units (${fmt(totalCost)}) has been sent for admin approval.`,
-    });
+    try {
+      const { error } = await supabase.from("purchase_requests").insert({
+        buyer_name: currentUser.name,
+        buyer_email: currentUser.email,
+        units: blockSizes[selected],
+        unit_price: unitPrice,
+        total_cost: totalCost,
+      });
+      if (error) throw error;
+      setSubmitted(true);
+      toast({
+        title: "Purchase request submitted",
+        description: `Your request for ${blockSizes[selected]} units (${fmt(totalCost)}) has been sent for admin approval.`,
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error submitting purchase",
+        description: err.message || "Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (submitted) {
