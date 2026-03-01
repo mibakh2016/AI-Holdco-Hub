@@ -9,7 +9,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/supabase-client";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 const unitPrice = holdingCompany.unitPrice;

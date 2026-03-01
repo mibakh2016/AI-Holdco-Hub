@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { shareholderData } from "@/lib/mock-data";
-import { supabase } from "@/integrations/supabase/supabase-client";
+import { supabase } from "@/integrations/supabase/client";
 
 const formatCurrency = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v);
