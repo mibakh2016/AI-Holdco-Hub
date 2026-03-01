@@ -253,6 +253,7 @@ export type Database = {
           stake_percent: number
           status: string
           updated_at: string
+          valuation_amount: number
           website_url: string | null
         }
         Insert: {
@@ -266,6 +267,7 @@ export type Database = {
           stake_percent?: number
           status?: string
           updated_at?: string
+          valuation_amount?: number
           website_url?: string | null
         }
         Update: {
@@ -279,6 +281,7 @@ export type Database = {
           stake_percent?: number
           status?: string
           updated_at?: string
+          valuation_amount?: number
           website_url?: string | null
         }
         Relationships: []
