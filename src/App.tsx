@@ -19,6 +19,8 @@ import AdminPlaceholder from "./pages/AdminPlaceholder";
 import AdminShareholders from "./pages/AdminShareholders";
 import AdminDocuments from "./pages/AdminDocuments";
 import AdminPortfolio from "./pages/AdminPortfolio";
+import TermsOfUse from "./pages/TermsOfUse";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +52,8 @@ const App = () => (
               <Route path="/admin/ai" element={<AIAssistant />} />
               <Route path="/admin/audit" element={<AdminPlaceholder />} />
               <Route path="/admin/settings" element={<AdminPlaceholder />} />
+              <Route path="/terms" element={<TermsOfUse />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
