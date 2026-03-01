@@ -16,6 +16,7 @@ import BuyShares from "./pages/BuyShares";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPlaceholder from "./pages/AdminPlaceholder";
+import AdminValuations from "./pages/AdminValuations";
 import AdminShareholders from "./pages/AdminShareholders";
 import AdminDocuments from "./pages/AdminDocuments";
 import AdminPortfolio from "./pages/AdminPortfolio";
@@ -47,7 +48,7 @@ const App = () => (
               <Route path="/admin/documents" element={<AdminDocuments />} />
               <Route path="/admin/shareholders" element={<AdminShareholders />} />
               
-              <Route path="/admin/valuations" element={<AdminPlaceholder />} />
+              <Route path="/admin/valuations" element={<AdminValuations />} />
               <Route path="/admin/portfolio" element={<AdminPortfolio />} />
               <Route path="/admin/ai" element={<AIAssistant />} />
               <Route path="/admin/audit" element={<AdminPlaceholder />} />
