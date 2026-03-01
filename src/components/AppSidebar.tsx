@@ -9,7 +9,7 @@ import {
   Shield,
   FileUp,
   Users,
-  BookOpen,
+  
   TrendingUp,
   Activity,
   Settings,
@@ -46,7 +46,7 @@ const adminNav = [
   { title: "Home", url: "/admin", icon: Shield },
   { title: "Document Intake", url: "/admin/documents", icon: FileUp },
   { title: "Shareholders", url: "/admin/shareholders", icon: Users },
-  { title: "Ownership Register", url: "/admin/ownership", icon: BookOpen },
+  
   { title: "AI Assistant", url: "/admin/ai", icon: Bot },
   { title: "Valuations", url: "/admin/valuations", icon: TrendingUp },
   { title: "Portfolio Entities", url: "/admin/portfolio", icon: FolderOpen },
