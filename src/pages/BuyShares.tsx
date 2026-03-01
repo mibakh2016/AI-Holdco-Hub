@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { holdingCompany } from "@/lib/mock-data";
 
 const unitPrice = holdingCompany.unitPrice;
-const blockSizes = [2, 4, 10, 25, 50];
+const blockSizes = [2, 4, 10];
 
 const fmt = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format(v);
