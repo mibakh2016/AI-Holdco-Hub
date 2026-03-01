@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      purchase_requests: {
+        Row: {
+          buyer_email: string
+          buyer_name: string
+          created_at: string
+          id: string
+          status: string
+          total_cost: number
+          unit_price: number
+          units: number
+        }
+        Insert: {
+          buyer_email: string
+          buyer_name: string
+          created_at?: string
+          id?: string
+          status?: string
+          total_cost: number
+          unit_price: number
+          units: number
+        }
+        Update: {
+          buyer_email?: string
+          buyer_name?: string
+          created_at?: string
+          id?: string
+          status?: string
+          total_cost?: number
+          unit_price?: number
+          units?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
