@@ -10,29 +10,29 @@
 @layer base {
   :root {
     /* Surfaces */
-    --background: 240 20% 98%;
-    --foreground: 240 33% 23%;
+    --background: 0 0% 100%;
+    --foreground: 240 30% 14%;
     --card: 0 0% 100%;
-    --card-foreground: 240 33% 23%;
+    --card-foreground: 240 30% 14%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 33% 23%;
+    --popover-foreground: 240 30% 14%;
     --surface-elevated: 0 0% 100%;
-    --surface-sunken: 240 20% 96%;
+    --surface-sunken: 240 20% 95%;
 
     /* Brand */
     --primary: 244 96% 60%;
     --primary-foreground: 0 0% 100%;
     --lime: 72 91% 53%;
-    --lime-foreground: 240 33% 23%;
-    --port-gore: 240 37% 23%;
+    --lime-foreground: 240 30% 14%;
+    --port-gore: 240 30% 14%;
     --port-gore-foreground: 0 0% 100%;
 
     /* Secondary / Muted / Accent */
-    --secondary: 240 20% 96%;
-    --secondary-foreground: 240 33% 23%;
-    --muted: 240 14% 94%;
-    --muted-foreground: 240 10% 46%;
-    --accent: 244 96% 96%;
+    --secondary: 240 20% 95%;
+    --secondary-foreground: 240 30% 14%;
+    --muted: 240 20% 95%;
+    --muted-foreground: 240 12% 61%;
+    --accent: 237 95% 97%;
     --accent-foreground: 244 96% 60%;
 
     /* Destructive */
@@ -64,21 +64,21 @@
     --chart-down: 0 72% 51%;
 
     /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgba(36, 36, 79, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(36, 36, 79, 0.07), 0 2px 4px -2px rgba(36, 36, 79, 0.05);
-    --shadow-lg: 0 10px 15px -3px rgba(36, 36, 79, 0.08), 0 4px 6px -4px rgba(36, 36, 79, 0.04);
+    --shadow-sm: 0 1px 2px 0 rgba(26, 26, 46, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(26, 26, 46, 0.07), 0 2px 4px -2px rgba(26, 26, 46, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(26, 26, 46, 0.08), 0 4px 6px -4px rgba(26, 26, 46, 0.04);
     --shadow-focus: 0 0 0 3px rgba(90, 56, 253, 0.15);
 
-    /* Sidebar — Port Gore dark */
-    --sidebar-background: 240 37% 23%;
-    --sidebar-foreground: 240 20% 90%;
+    /* Sidebar — White with violet accents */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 30% 14%;
     --sidebar-primary: 244 96% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 30% 30%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 240 25% 32%;
+    --sidebar-accent: 237 95% 97%;
+    --sidebar-accent-foreground: 244 96% 60%;
+    --sidebar-border: 240 14% 90%;
     --sidebar-ring: 244 96% 60%;
-    --sidebar-muted: 240 14% 60%;
+    --sidebar-muted: 240 12% 61%;
   }
 
   .dark {
