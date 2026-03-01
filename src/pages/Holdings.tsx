@@ -31,26 +31,26 @@ export default function Holdings() {
           {/* Key figures — clean horizontal layout */}
           <div className="grid grid-cols-4 gap-6 mb-6">
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Units</p>
+              <p className="text-sm text-foreground mb-1">Units</p>
               <p className="text-lg font-semibold">{tranche.units}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Ownership</p>
+              <p className="text-sm text-foreground mb-1">Ownership</p>
               <p className="text-lg font-semibold">{tranche.percent}%</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Invested</p>
+              <p className="text-sm text-foreground mb-1">Invested</p>
               <p className="text-lg font-semibold">{fmt(tranche.paidPrice)}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Current Value</p>
+              <p className="text-sm text-foreground mb-1">Current Value</p>
               <p className="text-lg font-semibold text-status-success">{fmt(tranche.currentValue)}</p>
             </div>
           </div>
 
           {/* Documents — simple list */}
           <div>
-            <p className="text-xs text-muted-foreground mb-2">Documents</p>
+            <p className="text-sm text-foreground mb-2">Documents</p>
             <div className="space-y-1">
               {tranche.documents.map((doc) => (
                 <button
