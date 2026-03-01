@@ -50,7 +50,7 @@ export default function Holdings() {
 
           {/* Documents — simple list */}
           <div>
-            <p className="text-sm text-foreground mb-2">Documents</p>
+            <p className="text-sm text-foreground mb-2">Linked Documents</p>
             <div className="space-y-1">
               {tranche.documents.map((doc) => (
                 <button
