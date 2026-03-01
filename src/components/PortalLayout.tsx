@@ -49,6 +49,12 @@ export default function PortalLayout() {
           <main className="flex-1 p-sp-6 bg-background overflow-auto">
             <Outlet />
           </main>
+          <footer className="border-t bg-card px-sp-6 py-4 text-center text-xs text-muted-foreground">
+            <p>© {new Date().getFullYear()} AI Holdco. All rights reserved.</p>
+            <p className="mt-1 max-w-2xl mx-auto leading-relaxed">
+              This portal is for authorized shareholders only. All information is confidential and proprietary. Securities offered through this platform have not been registered under the Securities Act of 1933 and are subject to restrictions on transferability and resale.
+            </p>
+          </footer>
         </div>
       </div>
     </SidebarProvider>
