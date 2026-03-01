@@ -29,92 +29,146 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Step 1: Generate embedding for the user query
-    const embResponse = await fetch("https://ai.gateway.lovable.dev/v1/embeddings", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/text-embedding-004",
-        input: [message],
-      }),
-    });
+    // Step 1: Extract search keywords from the user message
+    const keywords = message
+      .toLowerCase()
+      .replace(/[^\w\s]/g, "")
+      .split(/\s+/)
+      .filter((w: string) => w.length > 2 && !STOP_WORDS.has(w));
 
     let relevantChunks: any[] = [];
 
-    if (embResponse.ok) {
-      const embData = await embResponse.json();
-      const queryEmbedding = embData.data?.[0]?.embedding;
+    // Step 2: Search document chunks using text matching
+    if (keywords.length > 0) {
+      // Search with each keyword using OR logic for broader results
+      const searchPattern = keywords.slice(0, 6).map((k: string) => `%${k}%`);
 
-      if (queryEmbedding) {
-        // Step 2: Search for relevant document chunks
-        const { data: chunks, error } = await supabase.rpc("match_document_chunks", {
-          query_embedding: JSON.stringify(queryEmbedding),
-          match_threshold: 0.3,
-          match_count: 8,
-        });
+      for (const pattern of searchPattern) {
+        if (relevantChunks.length >= 10) break;
+        const { data } = await supabase
+          .from("document_chunks")
+          .select("chunk_text, page_number, document_id")
+          .eq("is_active", true)
+          .ilike("chunk_text", pattern)
+          .limit(5);
 
-        if (!error && chunks) {
-          // Fetch document titles for citations
-          const docIds = [...new Set(chunks.map((c: any) => c.document_id))];
-          const { data: docs } = await supabase
-            .from("documents")
-            .select("id, title, document_type")
-            .in("id", docIds);
-
-          const docMap = new Map((docs || []).map((d: any) => [d.id, d]));
-
-          relevantChunks = chunks.map((c: any) => ({
-            text: c.chunk_text,
-            page: c.page_number,
-            similarity: c.similarity,
-            document: docMap.get(c.document_id) || { title: "Unknown", document_type: "general" },
-          }));
+        if (data) {
+          for (const row of data) {
+            if (!relevantChunks.some((c) => c.chunk_text === row.chunk_text)) {
+              relevantChunks.push(row);
+            }
+          }
         }
       }
     }
 
-    // Also do a basic text search as fallback
-    if (relevantChunks.length === 0) {
-      const { data: textResults } = await supabase
+    // Step 3: Also search document metadata (titles, descriptions, AI summaries)
+    const { data: matchingDocs } = await supabase
+      .from("documents")
+      .select("id, title, document_type, description, ai_suggested_metadata")
+      .eq("status", "published")
+      .limit(20);
+
+    // Score documents by keyword relevance
+    const scoredDocs = (matchingDocs || []).map((doc: any) => {
+      const searchable = [
+        doc.title,
+        doc.description,
+        doc.document_type,
+        doc.ai_suggested_metadata?.summary,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      const score = keywords.reduce(
+        (s: number, k: string) => s + (searchable.includes(k) ? 1 : 0),
+        0
+      );
+      return { ...doc, score };
+    });
+
+    const topDocs = scoredDocs
+      .filter((d: any) => d.score > 0)
+      .sort((a: any, b: any) => b.score - a.score)
+      .slice(0, 5);
+
+    // If we found relevant docs but no chunks, fetch their chunks
+    if (relevantChunks.length === 0 && topDocs.length > 0) {
+      const docIds = topDocs.map((d: any) => d.id);
+      const { data: docChunks } = await supabase
         .from("document_chunks")
         .select("chunk_text, page_number, document_id")
         .eq("is_active", true)
-        .ilike("chunk_text", `%${message.split(" ").slice(0, 3).join("%")}%`)
-        .limit(5);
+        .in("document_id", docIds)
+        .limit(10);
 
-      if (textResults && textResults.length > 0) {
-        const docIds = [...new Set(textResults.map((c: any) => c.document_id))];
-        const { data: docs } = await supabase
-          .from("documents")
-          .select("id, title, document_type")
-          .in("id", docIds);
+      if (docChunks) relevantChunks = docChunks;
+    }
 
-        const docMap = new Map((docs || []).map((d: any) => [d.id, d]));
+    // Step 4: Enrich chunks with document metadata
+    const chunkDocIds = [...new Set(relevantChunks.map((c: any) => c.document_id))];
+    let docMap = new Map<string, any>();
 
-        relevantChunks = textResults.map((c: any) => ({
-          text: c.chunk_text,
-          page: c.page_number,
-          similarity: 0.5,
-          document: docMap.get(c.document_id) || { title: "Unknown", document_type: "general" },
-        }));
+    if (chunkDocIds.length > 0) {
+      const { data: docs } = await supabase
+        .from("documents")
+        .select("id, title, document_type, ai_suggested_metadata")
+        .in("id", chunkDocIds);
+
+      docMap = new Map((docs || []).map((d: any) => [d.id, d]));
+    }
+
+    const enrichedChunks = relevantChunks.map((c: any) => ({
+      text: c.chunk_text,
+      page: c.page_number,
+      document: docMap.get(c.document_id) || { title: "Unknown", document_type: "general" },
+    }));
+
+    // Step 5: Build context
+    let context = "";
+
+    if (enrichedChunks.length > 0) {
+      context = enrichedChunks
+        .map(
+          (c: any, i: number) =>
+            `[Source ${i + 1}: "${c.document.title}" ${c.page ? `Page ${c.page}` : ""}]\n${c.text}`
+        )
+        .join("\n\n---\n\n");
+    }
+
+    // Add document summaries for broader context
+    if (topDocs.length > 0) {
+      const summaries = topDocs
+        .map((d: any) => {
+          const summary = d.ai_suggested_metadata?.summary || "";
+          return `• "${d.title}" (${d.document_type})${summary ? `: ${summary}` : ""}`;
+        })
+        .join("\n");
+      context += `\n\n--- Document Summaries ---\n${summaries}`;
+    }
+
+    if (!context) {
+      // Provide list of all available published documents
+      const { data: allDocs } = await supabase
+        .from("documents")
+        .select("title, document_type")
+        .eq("status", "published");
+
+      if (allDocs && allDocs.length > 0) {
+        context = `No specific matches found. Available published documents:\n${allDocs
+          .map((d: any) => `• "${d.title}" (${d.document_type})`)
+          .join("\n")}`;
+      } else {
+        context = "No documents are currently published in the system.";
       }
     }
 
-    // Step 3: Build context from chunks
-    const context = relevantChunks.length > 0
-      ? relevantChunks
-          .map((c, i) => `[Source ${i + 1}: "${c.document.title}" ${c.page ? `Page ${c.page}` : ""}]\n${c.text}`)
-          .join("\n\n---\n\n")
-      : "No relevant documents found in the knowledge base.";
-
-    // Step 4: Generate response with citations
+    // Step 6: Generate response
     const messages = [
       {
         role: "system",
-        content: `You are a governance document assistant for Board_Vault. Answer questions using ONLY the provided document excerpts. Always cite your sources using [Source N] notation. If the documents don't contain relevant information, say so clearly. Be precise, professional, and concise.
+        content: `You are a governance document assistant for Board_Vault. Answer questions using the provided document context. Always cite your sources using [Source N] notation when referencing specific document excerpts. If the documents don't contain relevant information, say so clearly. Be precise, professional, and concise.
 
 Available document context:
 ${context}`,
@@ -126,30 +180,50 @@ ${context}`,
       { role: "user", content: message },
     ];
 
-    const chatResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages,
-      }),
-    });
+    const chatResponse = await fetch(
+      "https://ai.gateway.lovable.dev/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-3-flash-preview",
+          messages,
+        }),
+      }
+    );
 
-    if (!chatResponse.ok) throw new Error("AI response failed");
+    if (!chatResponse.ok) {
+      const errText = await chatResponse.text();
+      console.error("AI response error:", chatResponse.status, errText);
+
+      if (chatResponse.status === 429) {
+        return new Response(
+          JSON.stringify({ error: "Rate limit exceeded, please try again later.", answer: "I'm currently rate-limited. Please try again in a moment." }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (chatResponse.status === 402) {
+        return new Response(
+          JSON.stringify({ error: "Payment required.", answer: "AI credits have been exhausted. Please add credits to continue." }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      throw new Error("AI response failed");
+    }
 
     const chatData = await chatResponse.json();
-    const answer = chatData.choices?.[0]?.message?.content || "I could not generate a response.";
+    const answer =
+      chatData.choices?.[0]?.message?.content ||
+      "I could not generate a response.";
 
-    // Build citations array
-    const citations = relevantChunks.map((c, i) => ({
+    const citations = enrichedChunks.map((c: any, i: number) => ({
       index: i + 1,
       document_title: c.document.title,
-      document_type: c.document.type,
+      document_type: c.document.document_type,
       page: c.page,
-      similarity: c.similarity,
     }));
 
     return new Response(JSON.stringify({ answer, citations }), {
@@ -157,9 +231,26 @@ ${context}`,
     });
   } catch (e) {
     console.error("ai-assistant error:", e);
+    const message = e instanceof Error ? e.message : "Unknown error";
     return new Response(
-      JSON.stringify({ error: e.message, answer: "Sorry, I encountered an error processing your request." }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({
+        error: message,
+        answer: "Sorry, I encountered an error processing your request.",
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
     );
   }
 });
+
+const STOP_WORDS = new Set([
+  "the", "and", "for", "are", "but", "not", "you", "all", "can", "had",
+  "her", "was", "one", "our", "out", "has", "have", "been", "some", "them",
+  "than", "its", "over", "such", "that", "this", "with", "will", "each",
+  "from", "they", "were", "which", "their", "said", "what", "about",
+  "would", "make", "like", "into", "could", "time", "very", "when", "come",
+  "just", "know", "take", "people", "also", "how", "after", "should",
+  "well", "because", "these", "give", "most", "does", "where", "who",
+]);
