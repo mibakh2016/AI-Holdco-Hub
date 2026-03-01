@@ -107,7 +107,7 @@ export default function Holdings() {
                   <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
                   <span className="text-sm font-medium flex-1 truncate">{doc.name}</span>
                   <span className="text-xs text-muted-foreground shrink-0">{doc.type}</span>
-                  <Download className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  <Download className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                 </button>
               ))}
             </div>
