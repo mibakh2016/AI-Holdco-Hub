@@ -3,6 +3,14 @@ import { portfolioVentures } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Layers, TrendingUp, ExternalLink } from "lucide-react";
 
+const sectorColors: Record<string, string> = {
+  Healthcare: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  Fintech: "bg-blue-100 text-blue-700 border-blue-200",
+  Enterprise: "bg-amber-100 text-amber-700 border-amber-200",
+  "Legal Tech": "bg-purple-100 text-purple-700 border-purple-200",
+};
+
+
 export default function Portfolio() {
   return (
     <div className="space-y-sp-4 max-w-6xl">
@@ -26,7 +34,7 @@ export default function Portfolio() {
               </div>
               <div>
                 <h3 className="font-bold text-sm leading-tight">{v.name}</h3>
-                <Badge variant="secondary" className="text-[10px] mt-1">{v.sector}</Badge>
+                <Badge className={`text-[10px] mt-1 border ${sectorColors[v.sector] ?? "bg-muted text-muted-foreground"}`}>{v.sector}</Badge>
               </div>
             </div>
 
