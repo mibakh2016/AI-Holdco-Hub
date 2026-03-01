@@ -14,6 +14,7 @@ export default {
       fontFamily: {
         sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
         display: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        script: ["Caveat", "cursive"],
       },
       fontSize: {
         "label": ["12px", { lineHeight: "1.33", letterSpacing: "0.04em", fontWeight: "500" }],
