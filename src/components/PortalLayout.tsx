@@ -50,9 +50,11 @@ export default function PortalLayout() {
             <Outlet />
           </main>
           <footer className="border-t bg-card px-sp-6 py-4 text-center text-xs text-muted-foreground">
-            <p>© {new Date().getFullYear()} AI Holdco. All rights reserved.</p>
-            <p className="mt-1 max-w-2xl mx-auto leading-relaxed">
-              This portal is for authorized shareholders only. All information is confidential and proprietary. Securities offered through this platform have not been registered under the Securities Act of 1933 and are subject to restrictions on transferability and resale.
+            <p className="max-w-2xl mx-auto leading-relaxed">
+              By using the Vault Platform (Platform) you acknowledge and agree that the data and documents produced by the Platform may not be suitable for your specific situation and that you should seek professional legal advice. You disclaim and indemnify Vault for any loss sustained as a result of using the Platform. You can view our Software{" "}
+              <a href="/terms" className="underline hover:text-foreground transition-colors">Terms of use here</a>
+              {" "}and our{" "}
+              <a href="/privacy" className="underline hover:text-foreground transition-colors">Privacy policy here</a>.
             </p>
           </footer>
         </div>
