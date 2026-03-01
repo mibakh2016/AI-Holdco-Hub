@@ -14,6 +14,188 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
+      audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      documents: {
+        Row: {
+          created_at: string
+          description: string | null
+          document_type: string
+          file_name: string | null
+          file_size: number | null
+          file_url: string | null
+          id: string
+          status: string
+          title: string
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          document_type?: string
+          file_name?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          document_type?: string
+          file_name?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
+      ownership_register: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          price_per_unit: number
+          shareholder_id: string
+          total_amount: number
+          transaction_date: string
+          transaction_type: string
+          units: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          price_per_unit: number
+          shareholder_id: string
+          total_amount: number
+          transaction_date?: string
+          transaction_type?: string
+          units: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          price_per_unit?: number
+          shareholder_id?: string
+          total_amount?: number
+          transaction_date?: string
+          transaction_type?: string
+          units?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ownership_register_shareholder_id_fkey"
+            columns: ["shareholder_id"]
+            isOneToOne: false
+            referencedRelation: "shareholders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portfolio_entities: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          latest_milestone: string | null
+          name: string
+          sector: string | null
+          stake_percent: number
+          status: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          latest_milestone?: string | null
+          name: string
+          sector?: string | null
+          stake_percent?: number
+          status?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          latest_milestone?: string | null
+          name?: string
+          sector?: string | null
+          stake_percent?: number
+          status?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -77,15 +259,120 @@ export type Database = {
         }
         Relationships: []
       }
+      shareholders: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          joined_date: string
+          ownership_percent: number
+          phone: string | null
+          status: string
+          units: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          joined_date?: string
+          ownership_percent?: number
+          phone?: string | null
+          status?: string
+          units?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          joined_date?: string
+          ownership_percent?: number
+          phone?: string | null
+          status?: string
+          units?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      valuations: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          methodology: string | null
+          notes: string | null
+          status: string
+          total_valuation: number
+          unit_price: number
+          updated_at: string
+          valuation_date: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          methodology?: string | null
+          notes?: string | null
+          status?: string
+          total_valuation: number
+          unit_price: number
+          updated_at?: string
+          valuation_date: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          methodology?: string | null
+          notes?: string | null
+          status?: string
+          total_valuation?: number
+          unit_price?: number
+          updated_at?: string
+          valuation_date?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -212,6 +499,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
