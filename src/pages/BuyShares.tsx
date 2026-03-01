@@ -62,7 +62,7 @@ export default function BuyShares() {
           Please read and accept the Equity Units purchase agreement before proceeding.
         </p>
 
-        <div className="border rounded-md p-5 max-h-56 overflow-y-auto bg-background text-sm leading-relaxed text-foreground space-y-4 mb-5">
+        <div className="border rounded-md p-5 max-h-56 overflow-y-auto bg-muted text-sm leading-relaxed text-foreground space-y-4 mb-5 ml-6">
           <h3 className="font-bold text-base">Equity Units Purchase Agreement</h3>
           <p className="text-muted-foreground">
             This Equity Units Purchase Agreement ("Agreement") is entered into by and between the Shareholder ("Buyer") and {holdingCompany.name} (the "Company"), effective as of the date of acceptance.
