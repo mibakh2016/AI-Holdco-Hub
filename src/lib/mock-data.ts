@@ -11,8 +11,10 @@ export const holdingCompany = {
   description: "A holding company owning and operating a portfolio of applied AI ventures across healthcare, fintech, and enterprise automation. Founded in 2023, Nexus AI Holdings provides strategic capital, operational support, and shared infrastructure to its portfolio companies.",
   currentValuation: 48_500_000,
   previousValuation: 42_000_000,
-  secFilingUrl: "#",
+  unitPrice: 187,
+  websiteUrl: "#",
   etherscanUrl: "#",
+  secFilingUrl: "#",
 };
 
 export const shareholderData = {
