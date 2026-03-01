@@ -10,7 +10,7 @@ const pageTitles: Record<string, string> = {
   "/company": "Company Info",
   "/ai-assistant": "AI Assistant",
   "/portfolio": "Portfolio Ventures",
-  "/buy-shares": "Buy Share Units",
+  "/buy-shares": "Buy Equity",
   "/profile": "My Profile",
   "/admin": "Admin Dashboard",
   "/admin/documents": "Document Intake",

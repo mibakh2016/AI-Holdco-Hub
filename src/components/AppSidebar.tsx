@@ -37,7 +37,7 @@ const shareholderNav = [
   { title: "Company Info", url: "/company", icon: Building2 },
   { title: "AI Assistant", url: "/ai-assistant", icon: Bot },
   { title: "Portfolio Ventures", url: "/portfolio", icon: FolderOpen },
-  { title: "Buy Share Units", url: "/buy-shares", icon: ShoppingCart },
+  { title: "Buy Equity", url: "/buy-shares", icon: ShoppingCart },
   { title: "My Profile", url: "/profile", icon: User },
 ];
 
