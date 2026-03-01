@@ -56,7 +56,7 @@ export default function BuyShares() {
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Agreement Section */}
-      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-lg p-6">
+      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
         <h2 className="font-bold text-lg mb-1">Equity Units Agreement</h2>
         <p className="text-sm text-primary font-medium mb-4">
           Please read and accept the Equity Units purchase agreement before proceeding.
@@ -106,7 +106,7 @@ export default function BuyShares() {
       </motion.div>
 
       {/* Purchase Information */}
-      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass-card rounded-lg p-6">
+      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
         <h2 className="font-bold text-lg mb-1">Purchase Information</h2>
         <p className="text-sm text-muted-foreground mb-5">
           Current price per Equity Unit: <span className="font-semibold text-foreground">{fmt(unitPrice)}</span>
