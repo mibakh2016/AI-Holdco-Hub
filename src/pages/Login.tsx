@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,15 +8,28 @@ import { ArrowRight, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Login() {
-  const navigate = useNavigate();
+  const { session, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [step, setStep] = useState<"email" | "password" | "signup">("email");
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
+
+  if (session) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const handleEmailContinue = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,21 +39,21 @@ export default function Login() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      navigate("/dashboard");
+      // AuthContext will detect session → Navigate component redirects
     } catch (err: any) {
       toast({ title: "Sign in failed", description: err.message, variant: "destructive" });
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -48,11 +61,11 @@ export default function Login() {
         options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin },
       });
       if (error) throw error;
-      navigate("/dashboard");
+      toast({ title: "Check your email", description: "We sent you a confirmation link." });
     } catch (err: any) {
       toast({ title: "Sign up failed", description: err.message, variant: "destructive" });
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -159,8 +172,8 @@ export default function Login() {
                   />
                 </div>
               </div>
-              <Button type="submit" className="w-full h-[52px] font-semibold text-[15px] rounded-lg" disabled={loading}>
-                {loading ? "Signing in…" : "Sign in"}
+              <Button type="submit" className="w-full h-[52px] font-semibold text-[15px] rounded-lg" disabled={submitting}>
+                {submitting ? "Signing in…" : "Sign in"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
@@ -218,8 +231,8 @@ export default function Login() {
                   className="h-[52px] text-sm rounded-lg border-2 border-border focus:border-primary transition-colors"
                 />
               </div>
-              <Button type="submit" className="w-full h-[52px] font-semibold text-[15px] rounded-lg" disabled={loading}>
-                {loading ? "Creating account…" : "Create account"}
+              <Button type="submit" className="w-full h-[52px] font-semibold text-[15px] rounded-lg" disabled={submitting}>
+                {submitting ? "Creating account…" : "Create account"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
