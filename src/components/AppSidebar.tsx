@@ -79,7 +79,7 @@ export function AppSidebar() {
           </div>
           {!collapsed && (
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-sidebar-foreground">Board Vault</span>
+              <span className="text-sm font-semibold text-sidebar-foreground">AI Holdings Hub</span>
               <span className="text-[11px] text-sidebar-muted">Admin Portal</span>
             </div>
           )}
