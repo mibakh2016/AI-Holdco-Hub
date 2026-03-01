@@ -148,7 +148,7 @@ export default function AdminPortfolio() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold tracking-tight">Portfolio Entities</h2>
-          <p className="text-sm text-muted-foreground">Manage companies and ventures in the portfolio.</p>
+          <p className="text-sm text-black">Manage companies and ventures in the portfolio.</p>
         </div>
         <Button onClick={openAdd}>
           <Plus className="h-4 w-4 mr-2" /> Add Entity
