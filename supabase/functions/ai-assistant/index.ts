@@ -125,7 +125,28 @@ serve(async (req) => {
       document: docMap.get(c.document_id) || { title: "Unknown", document_type: "general" },
     }));
 
-    // Step 5: Build context
+    // Step 5: Fetch portfolio entities for company knowledge
+    const { data: portfolioEntities } = await supabase
+      .from("portfolio_entities")
+      .select("name, sector, description, stake_percent, status, website_url, latest_milestone, logo_url")
+      .order("name");
+
+    let portfolioContext = "";
+    if (portfolioEntities && portfolioEntities.length > 0) {
+      portfolioContext = "\n\n--- Portfolio Entities ---\n" +
+        portfolioEntities.map((e: any) => {
+          const parts = [`• ${e.name}`];
+          if (e.sector) parts.push(`Sector: ${e.sector}`);
+          if (e.stake_percent) parts.push(`Stake: ${e.stake_percent}%`);
+          if (e.status) parts.push(`Status: ${e.status}`);
+          if (e.description) parts.push(`Description: ${e.description}`);
+          if (e.latest_milestone) parts.push(`Latest Milestone: ${e.latest_milestone}`);
+          if (e.website_url) parts.push(`Website: ${e.website_url}`);
+          return parts.join(" | ");
+        }).join("\n");
+    }
+
+    // Step 6: Build context
     let context = "";
 
     if (enrichedChunks.length > 0) {
@@ -148,29 +169,32 @@ serve(async (req) => {
       context += `\n\n--- Document Summaries ---\n${summaries}`;
     }
 
-    if (!context) {
-      // Provide list of all available published documents
+    // Always append portfolio entities context
+    context += portfolioContext;
+
+    if (!context.replace(portfolioContext, "").trim()) {
+      // No document matches found, add available docs list
       const { data: allDocs } = await supabase
         .from("documents")
         .select("title, document_type")
         .eq("status", "published");
 
       if (allDocs && allDocs.length > 0) {
-        context = `No specific matches found. Available published documents:\n${allDocs
+        context = `No specific document matches found. Available published documents:\n${allDocs
           .map((d: any) => `• "${d.title}" (${d.document_type})`)
-          .join("\n")}`;
-      } else {
-        context = "No documents are currently published in the system.";
+          .join("\n")}` + portfolioContext;
+      } else if (!portfolioContext) {
+        context = "No documents or portfolio entities are currently available in the system.";
       }
     }
 
-    // Step 6: Generate response
+    // Step 7: Generate response
     const messages = [
       {
         role: "system",
-        content: `You are a company info assistant for Board_Vault. Answer questions using the provided document context. Always cite your sources using [Source N] notation when referencing specific document excerpts. If the documents don't contain relevant information, say so clearly. Be precise, professional, and concise.
+        content: `You are a company info assistant for AI Holdco Hub. Answer questions using the provided document context and portfolio entity data. Always cite your sources using [Source N] notation when referencing specific document excerpts. When answering about portfolio companies, reference the portfolio data provided. If the information isn't available, say so clearly. Be precise, professional, and concise.
 
-Available document context:
+Available context:
 ${context}`,
       },
       ...(conversation_history || []).map((m: any) => ({
