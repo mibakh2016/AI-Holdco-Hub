@@ -6,6 +6,7 @@ import { Upload, FileText, X, HardDrive, Monitor, Loader2, CheckCircle2 } from "
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import DocumentLibrary from "@/components/admin/DocumentLibrary";
 
 const CATEGORY_LABELS: Record<string, string> = {
   subscription_agreement: "Subscription Agreement",
@@ -114,11 +115,12 @@ export default function AdminDocuments() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[65vh] max-w-xl mx-auto px-4">
+    <div className="space-y-10 px-4 py-6 max-w-5xl mx-auto">
+      {/* Upload Section */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full space-y-6 text-center"
+        className="max-w-xl mx-auto w-full space-y-6 text-center"
       >
         <div className="space-y-1">
           <h2 className="text-xl font-bold tracking-tight">Document Intake</h2>
@@ -158,7 +160,7 @@ export default function AdminDocuments() {
           </motion.div>
         )}
 
-        {/* Drop zone — hidden after successful upload */}
+        {/* Drop zone */}
         {!categorizeResult && !isCategorizing && (
           <>
             <div
@@ -213,7 +215,6 @@ export default function AdminDocuments() {
               )}
             </div>
 
-            {/* Source buttons */}
             <div className="flex gap-3 justify-center">
               <Button
                 variant="outline"
@@ -233,7 +234,6 @@ export default function AdminDocuments() {
               </Button>
             </div>
 
-            {/* Upload action */}
             {file && (
               <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}>
                 <Button
@@ -248,6 +248,12 @@ export default function AdminDocuments() {
           </>
         )}
       </motion.div>
+
+      {/* Document Library */}
+      <div>
+        <h3 className="text-lg font-semibold tracking-tight mb-4">Document Library</h3>
+        <DocumentLibrary />
+      </div>
     </div>
   );
 }
