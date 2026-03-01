@@ -91,7 +91,7 @@ export default function Login() {
       >
         <div className="text-center">
           <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">
-            Board Vault
+            AI Holdco Hub
           </h1>
         </div>
 
