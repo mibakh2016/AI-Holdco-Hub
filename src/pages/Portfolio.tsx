@@ -1,50 +1,50 @@
 import { motion } from "framer-motion";
 import { portfolioVentures } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpRight, Layers } from "lucide-react";
+import { Layers, TrendingUp } from "lucide-react";
 
 export default function Portfolio() {
   return (
-    <div className="space-y-sp-4 max-w-5xl">
+    <div className="space-y-sp-4 max-w-6xl">
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-muted-foreground">
         Portfolio companies owned and operated by Nexus AI Holdings.
       </motion.p>
 
-      <div className="grid gap-sp-4 sm:grid-cols-2">
+      <div className="grid gap-sp-4 sm:grid-cols-2 lg:grid-cols-3">
         {portfolioVentures.map((v, i) => (
           <motion.div
             key={v.id}
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className="glass-card rounded-lg p-sp-4 group cursor-pointer transition-all"
+            transition={{ delay: i * 0.06 }}
+            className="glass-card rounded-lg border-2 border-primary/20 hover:border-primary/50 transition-colors p-sp-6 flex flex-col gap-4"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
-                  <Layers className="h-5 w-5 text-accent-foreground" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm">{v.name}</h3>
-                  <Badge variant="default" className="text-[10px] mt-1">{v.sector}</Badge>
-                </div>
+            {/* Header */}
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent">
+                <Layers className="h-5 w-5 text-accent-foreground" />
               </div>
-              <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              <div>
+                <h3 className="font-bold text-sm leading-tight">{v.name}</h3>
+                <Badge variant="secondary" className="text-[10px] mt-1">{v.sector}</Badge>
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed mb-4">{v.description}</p>
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="text-muted-foreground">Holding stake</span>
-              <span className="font-bold text-primary">{v.stakePercent}%</span>
+
+            {/* Description */}
+            <p className="text-xs text-muted-foreground leading-relaxed">{v.description}</p>
+
+            {/* Stats */}
+            <div className="mt-auto space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-semibold text-foreground">Holding Stake:</span>
+                <span className="font-bold text-primary">{v.stakePercent}%</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs">
+                <TrendingUp className="h-3.5 w-3.5 text-status-success shrink-0" />
+                <span className="font-semibold text-foreground">Latest Milestone:</span>
+                <span className="text-muted-foreground text-right ml-auto">{v.milestone}</span>
+              </div>
             </div>
-            <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${v.stakePercent}%` }}
-                transition={{ duration: 0.5, delay: i * 0.05 + 0.15 }}
-                className="h-full rounded-full bg-primary"
-              />
-            </div>
-            <p className="text-[11px] text-status-success mt-3 font-medium">🎯 {v.milestone}</p>
           </motion.div>
         ))}
       </div>
