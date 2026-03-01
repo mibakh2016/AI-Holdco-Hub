@@ -4,6 +4,8 @@ import { ExternalLink, Building2, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const fmt = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v);
@@ -11,6 +13,14 @@ const fmtPrice = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(v);
 
 export default function CompanyOverview() {
+  const { data: holdingsValue = 0 } = useQuery({
+    queryKey: ["holdings-value"],
+    queryFn: async () => {
+      const { data: entities } = await supabase.from("portfolio_entities").select("valuation_amount");
+      return (entities ?? []).reduce((sum, e) => sum + (e.valuation_amount ?? 0), 0);
+    },
+  });
+
   return (
     <div className="space-y-sp-4 max-w-5xl">
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-lg p-sp-6 space-y-4">
@@ -47,10 +57,7 @@ export default function CompanyOverview() {
           <TrendingUp className="h-5 w-5 text-status-success" />
           <h3 className="font-semibold">Current Holdings Value</h3>
         </div>
-        <p className="stat-value text-foreground">{fmt(holdingCompany.currentValuation)}</p>
-        <p className="text-sm text-status-success font-medium mt-1">
-          +{(((holdingCompany.currentValuation - holdingCompany.previousValuation) / holdingCompany.previousValuation) * 100).toFixed(1)}% from previous quarter
-        </p>
+        <p className="stat-value text-foreground">{fmt(holdingsValue)}</p>
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="glass-card rounded-lg">
