@@ -106,8 +106,33 @@ export default function DocumentConfirmDialog({ documentId, open, onOpenChange }
   if (doc && initialized !== doc.id) {
     setDocType(doc.document_type || aiMeta?.suggested_type || "general");
     setEffectiveDate(aiMeta?.suggested_effective_date || "");
-    setShareholderId("none");
-    setEntityId("none");
+    
+    // Auto-match AI-suggested shareholder name to existing shareholders
+    let matchedShareholderId = "none";
+    if (aiMeta?.suggested_shareholder_name && shareholders) {
+      const suggestedName = (aiMeta.suggested_shareholder_name as string).toLowerCase().trim();
+      const match = shareholders.find((s) => 
+        s.full_name.toLowerCase().trim() === suggestedName ||
+        s.full_name.toLowerCase().trim().includes(suggestedName) ||
+        suggestedName.includes(s.full_name.toLowerCase().trim())
+      );
+      if (match) matchedShareholderId = match.id;
+    }
+    setShareholderId(matchedShareholderId);
+
+    // Auto-match AI-suggested entity name to existing entities
+    let matchedEntityId = "none";
+    if (aiMeta?.suggested_entity_name && entities) {
+      const suggestedEntity = (aiMeta.suggested_entity_name as string).toLowerCase().trim();
+      const match = entities.find((e) =>
+        e.name.toLowerCase().trim() === suggestedEntity ||
+        e.name.toLowerCase().trim().includes(suggestedEntity) ||
+        suggestedEntity.includes(e.name.toLowerCase().trim())
+      );
+      if (match) matchedEntityId = match.id;
+    }
+    setEntityId(matchedEntityId);
+    
     setValuationId("none");
     setInitialized(doc.id);
   }
