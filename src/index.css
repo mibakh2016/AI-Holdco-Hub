@@ -182,9 +182,10 @@
   .space-12 { gap: 48px; }
   /* Typography presets */
   .text-label {
-    @apply text-xs font-medium text-muted-foreground uppercase tracking-wider;
+    @apply text-xs font-medium text-foreground;
     font-size: 12px;
-    letter-spacing: 0.04em;
+    letter-spacing: -0.006em;
+    text-transform: none;
   }
   .text-table {
     font-size: 13px;
