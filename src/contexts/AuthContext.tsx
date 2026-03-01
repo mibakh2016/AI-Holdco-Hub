@@ -27,41 +27,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+    let active = true;
 
-        if (session?.user) {
-          const { data } = await supabase
-            .from("profiles")
-            .select("full_name")
-            .eq("user_id", session.user.id)
-            .single();
-          setProfile(data as { full_name: string | null } | null);
-        } else {
-          setProfile(null);
-        }
+    const fetchProfile = (userId: string) => {
+      void supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("user_id", userId)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (active) {
+            setProfile((data as { full_name: string | null } | null) ?? null);
+          }
+        });
+    };
 
-        setLoading(false);
+    const applySession = (nextSession: Session | null) => {
+      if (!active) return;
+
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
+
+      if (nextSession?.user) {
+        fetchProfile(nextSession.user.id);
+      } else {
+        setProfile(null);
       }
-    );
+    };
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        supabase
-          .from("profiles")
-          .select("full_name")
-          .eq("user_id", session.user.id)
-          .single()
-          .then(({ data }) => setProfile(data as { full_name: string | null } | null));
-      }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      applySession(nextSession);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    supabase.auth
+      .getSession()
+      .then(({ data: { session: currentSession } }) => {
+        applySession(currentSession);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {
