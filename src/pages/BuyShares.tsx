@@ -59,21 +59,21 @@ export default function BuyShares() {
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-lg p-6">
         <h2 className="font-bold text-lg mb-1">Equity Units Agreement</h2>
         <p className="text-sm text-primary font-medium mb-4">
-          Please read and accept the Share Units purchase agreement before proceeding.
+          Please read and accept the Equity Units purchase agreement before proceeding.
         </p>
 
         <div className="border rounded-md p-5 max-h-56 overflow-y-auto bg-background text-sm leading-relaxed text-foreground space-y-4 mb-5">
           <h3 className="font-bold text-base">Equity Units Purchase Agreement</h3>
           <p className="text-muted-foreground">
-            This Share Units Purchase Agreement ("Agreement") is entered into by and between the Shareholder ("Buyer") and {holdingCompany.name} (the "Company"), effective as of the date of acceptance.
+            This Equity Units Purchase Agreement ("Agreement") is entered into by and between the Shareholder ("Buyer") and {holdingCompany.name} (the "Company"), effective as of the date of acceptance.
           </p>
           <h4 className="font-semibold">1. Definitions</h4>
           <p className="text-muted-foreground">
-            <strong>Share Units:</strong> Represents fractional ownership interest in {holdingCompany.name}. Each unit entitles the holder to a proportional share of the Company's net asset value and voting rights as outlined in the Operating Agreement.
+            <strong>Equity Units:</strong> Represents fractional ownership interest in {holdingCompany.name}. Each unit entitles the holder to a proportional share of the Company's net asset value and voting rights as outlined in the Operating Agreement.
           </p>
           <h4 className="font-semibold">2. Purchase Terms</h4>
           <p className="text-muted-foreground">
-            The Buyer agrees to purchase the specified number of Share Units at the current unit price as determined by the Company's most recent valuation. All purchases are subject to administrative approval and compliance review.
+            The Buyer agrees to purchase the specified number of Equity Units at the current unit price as determined by the Company's most recent valuation. All purchases are subject to administrative approval and compliance review.
           </p>
           <h4 className="font-semibold">3. Payment</h4>
           <p className="text-muted-foreground">
@@ -81,7 +81,7 @@ export default function BuyShares() {
           </p>
           <h4 className="font-semibold">4. Transfer Restrictions</h4>
           <p className="text-muted-foreground">
-            Share Units are subject to transfer restrictions as outlined in the Company's Operating Agreement. No transfer of units may be made without prior written consent of the Company's Board of Directors.
+            Equity Units are subject to transfer restrictions as outlined in the Company's Operating Agreement. No transfer of units may be made without prior written consent of the Company's Board of Directors.
           </p>
           <h4 className="font-semibold">5. Representations & Warranties</h4>
           <p className="text-muted-foreground">
@@ -89,7 +89,7 @@ export default function BuyShares() {
           </p>
           <h4 className="font-semibold">6. Risk Factors</h4>
           <p className="text-muted-foreground">
-            Investment in Share Units involves significant risk, including the potential loss of the entire investment. Past performance is not indicative of future results. The Buyer acknowledges having reviewed all risk disclosures provided by the Company.
+            Investment in Equity Units involves significant risk, including the potential loss of the entire investment. Past performance is not indicative of future results. The Buyer acknowledges having reviewed all risk disclosures provided by the Company.
           </p>
           <h4 className="font-semibold">7. Governing Law</h4>
           <p className="text-muted-foreground">
@@ -100,7 +100,7 @@ export default function BuyShares() {
         <label className="flex items-center gap-3 cursor-pointer">
           <Checkbox checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} />
           <span className="text-sm text-foreground">
-            I have read and agree to the Share Units purchase agreement
+            I have read and agree to the Equity Units purchase agreement
           </span>
         </label>
       </motion.div>
@@ -109,7 +109,7 @@ export default function BuyShares() {
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass-card rounded-lg p-6">
         <h2 className="font-bold text-lg mb-1">Purchase Information</h2>
         <p className="text-sm text-muted-foreground mb-5">
-          Current price per Share Unit: <span className="font-semibold text-foreground">{fmt(unitPrice)}</span>
+          Current price per Equity Unit: <span className="font-semibold text-foreground">{fmt(unitPrice)}</span>
         </p>
 
         <h3 className="font-semibold text-sm mb-3">Select Block Size</h3>
@@ -132,7 +132,7 @@ export default function BuyShares() {
 
         <div className="space-y-3 border-t pt-4">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Price per Share Unit:</span>
+            <span className="text-muted-foreground">Price per Equity Unit:</span>
             <span className="font-medium text-foreground">{fmt(unitPrice)}</span>
           </div>
           <div className="flex justify-between text-sm">
