@@ -31,7 +31,7 @@ export default function Portfolio() {
             </div>
 
             {/* Description */}
-            <p className="text-xs text-muted-foreground leading-relaxed">{v.description}</p>
+            <p className="text-xs text-foreground leading-relaxed">{v.description}</p>
 
             {/* Stats */}
             <div className="mt-auto space-y-2">
