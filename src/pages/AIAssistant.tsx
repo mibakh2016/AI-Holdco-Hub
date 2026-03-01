@@ -1,43 +1,73 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, Send, FileText, Sparkles, User } from "lucide-react";
+import { Bot, Send, FileText, Sparkles, User, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Citation {
+  index: number;
+  document_title: string;
+  document_type: string;
+  page: number | null;
+  similarity: number;
+}
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   text: string;
-  citation?: { doc: string; section: string };
+  citations?: Citation[];
 }
 
-const sampleMessages: Message[] = [
-  { id: "1", role: "user", text: "What are the terms of my subscription agreement?" },
-  {
-    id: "2",
-    role: "assistant",
-    text: "Based on your Series A Subscription Agreement dated March 15, 2024, you subscribed for 425 units representing 2.5% ownership at a price of $2,000 per unit. The agreement includes a 12-month lock-up period and standard anti-dilution protections. You also have pro-rata rights in subsequent funding rounds.",
-    citation: { doc: "Subscription Agreement — Series A", section: "Section 2.1, Terms of Subscription" },
-  },
-];
-
 export default function AIAssistant() {
-  const [messages, setMessages] = useState<Message[]>(sampleMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
     const userMsg: Message = { id: Date.now().toString(), role: "user", text: input };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
-    setTimeout(() => {
+    setIsLoading(true);
+
+    try {
+      const conversationHistory = messages.map((m) => ({ role: m.role, text: m.text }));
+
+      const { data, error } = await supabase.functions.invoke("ai-assistant", {
+        body: { message: input, conversation_history: conversationHistory },
+      });
+
+      if (error) throw error;
+
+      const assistantMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        text: data.answer || "I could not generate a response.",
+        citations: data.citations || [],
+      };
+      setMessages((prev) => [...prev, assistantMsg]);
+    } catch (err) {
+      console.error("AI Assistant error:", err);
       setMessages((prev) => [
         ...prev,
-        { id: (Date.now() + 1).toString(), role: "assistant", text: "I don't have enough information to answer this accurately — please contact management." },
+        {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          text: "Sorry, I encountered an error. Please try again.",
+        },
       ]);
-    }, 1200);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,6 +86,13 @@ export default function AIAssistant() {
 
         <ScrollArea className="flex-1 p-sp-4">
           <div className="space-y-4">
+            {messages.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
+                <Sparkles className="h-10 w-10 text-muted-foreground/30" />
+                <p className="text-sm text-muted-foreground">Ask questions about your governance documents</p>
+                <p className="text-xs text-muted-foreground">AI searches through all indexed documents to find relevant answers with citations</p>
+              </div>
+            )}
             <AnimatePresence>
               {messages.map((msg) => (
                 <motion.div
@@ -75,11 +112,18 @@ export default function AIAssistant() {
                     }`}>
                       {msg.text}
                     </div>
-                    {msg.citation && (
-                      <button className="flex items-center gap-2 text-xs text-primary hover:underline font-medium">
-                        <FileText className="h-3 w-3" />
-                        [{msg.citation.doc} — {msg.citation.section}]
-                      </button>
+                    {msg.citations && msg.citations.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {msg.citations.map((c) => (
+                          <button
+                            key={c.index}
+                            className="flex items-center gap-1.5 text-xs text-primary hover:underline font-medium bg-primary/5 rounded px-2 py-1"
+                          >
+                            <FileText className="h-3 w-3" />
+                            [{c.document_title}{c.page ? ` — Page ${c.page}` : ""}]
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
                   {msg.role === "user" && (
@@ -89,19 +133,35 @@ export default function AIAssistant() {
                   )}
                 </motion.div>
               ))}
+              {isLoading && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent">
+                    <Loader2 className="h-3.5 w-3.5 text-accent-foreground animate-spin" />
+                  </div>
+                  <div className="inline-block rounded-lg px-4 py-3 text-sm bg-secondary text-muted-foreground">
+                    Searching documents and generating response…
+                  </div>
+                </motion.div>
+              )}
             </AnimatePresence>
+            <div ref={scrollRef} />
           </div>
         </ScrollArea>
 
         <div className="p-sp-4 border-t">
           <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
-            <Input placeholder="Ask about your governance documents..." value={input} onChange={(e) => setInput(e.target.value)} />
-            <Button type="submit" size="icon" className="shrink-0">
+            <Input
+              placeholder="Ask about your governance documents..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={isLoading}
+            />
+            <Button type="submit" size="icon" className="shrink-0" disabled={isLoading}>
               <Send className="h-4 w-4" />
             </Button>
           </form>
           <p className="text-[11px] text-muted-foreground mt-2 text-center">
-            AI answers are sourced exclusively from verified documents. Any additional context is clearly flagged.
+            AI answers are sourced exclusively from indexed documents with citations.
           </p>
         </div>
       </div>

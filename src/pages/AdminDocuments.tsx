@@ -7,10 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import DocumentLibrary from "@/components/admin/DocumentLibrary";
+import DocumentConfirmDialog from "@/components/admin/DocumentConfirmDialog";
 
 const CATEGORY_LABELS: Record<string, string> = {
+  investment_agreement: "Investment Agreement",
   subscription_agreement: "Subscription Agreement",
+  purchase_agreement: "Purchase Agreement",
+  ppm: "PPM",
+  valuation_report: "Valuation Report",
   board_resolution: "Board Resolution",
+  sec_filing: "SEC Filing",
+  shareholder_record: "Shareholder Record",
+  portfolio_entity_record: "Portfolio Entity Record",
   financial_report: "Financial Report",
   shareholder_agreement: "Shareholder Agreement",
   bylaws: "Bylaws",
@@ -21,14 +29,13 @@ const CATEGORY_LABELS: Record<string, string> = {
   general: "General",
 };
 
-type CategorizeResult = { category: string; confidence: string } | null;
-
 export default function AdminDocuments() {
   const queryClient = useQueryClient();
   const [file, setFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
-  const [categorizeResult, setCategorizeResult] = useState<CategorizeResult>(null);
-  const [isCategorizing, setIsCategorizing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [confirmDocId, setConfirmDocId] = useState<string | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -40,7 +47,6 @@ export default function AdminDocuments() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    setCategorizeResult(null);
     const dropped = e.dataTransfer.files?.[0];
     if (dropped?.type === "application/pdf") {
       setFile(dropped);
@@ -50,7 +56,6 @@ export default function AdminDocuments() {
   }, []);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCategorizeResult(null);
     const selected = e.target.files?.[0];
     if (selected?.type === "application/pdf") {
       setFile(selected);
@@ -62,6 +67,7 @@ export default function AdminDocuments() {
   const uploadMutation = useMutation({
     mutationFn: async () => {
       if (!file) throw new Error("No file selected");
+      if (file.size > 50 * 1024 * 1024) throw new Error("File size exceeds 50MB");
 
       const path = `${crypto.randomUUID()}.pdf`;
       const { error: uploadError } = await supabase.storage
@@ -79,6 +85,7 @@ export default function AdminDocuments() {
         file_name: file.name,
         file_size: file.size,
         status: "pending",
+        processing_status: "pending",
       }]).select("id").single();
       if (error) throw error;
 
@@ -86,33 +93,33 @@ export default function AdminDocuments() {
     },
     onSuccess: async ({ documentId, title }) => {
       queryClient.invalidateQueries({ queryKey: ["admin-documents"] });
-      toast.success("Document uploaded — categorizing…");
+      toast.success("Document uploaded — processing…");
+      setFile(null);
 
-      // Trigger categorization
-      setIsCategorizing(true);
+      // Trigger AI processing
+      setIsProcessing(true);
       try {
-        const { data, error } = await supabase.functions.invoke("categorize-document", {
-          body: { document_id: documentId, title },
+        const { data, error } = await supabase.functions.invoke("process-document", {
+          body: { document_id: documentId },
         });
         if (error) throw error;
-        setCategorizeResult({ category: data.category, confidence: data.confidence });
         queryClient.invalidateQueries({ queryKey: ["admin-documents"] });
+        
+        // Open confirmation dialog
+        setConfirmDocId(documentId);
+        setConfirmOpen(true);
+        toast.success("AI processing complete — review & confirm");
       } catch (err) {
-        console.error("Categorization failed:", err);
-        setCategorizeResult({ category: "general", confidence: "low" });
-        toast.error("Auto-categorization failed — defaulted to General");
+        console.error("Processing failed:", err);
+        toast.error("Document processing failed — you can still confirm manually");
+        setConfirmDocId(documentId);
+        setConfirmOpen(true);
       } finally {
-        setIsCategorizing(false);
+        setIsProcessing(false);
       }
     },
     onError: (err: Error) => toast.error(err.message),
   });
-
-  const resetUpload = () => {
-    setFile(null);
-    setCategorizeResult(null);
-    setIsCategorizing(false);
-  };
 
   return (
     <div className="space-y-10 px-4 py-6 max-w-5xl mx-auto">
@@ -125,43 +132,27 @@ export default function AdminDocuments() {
         <div className="space-y-1">
           <h2 className="text-xl font-bold tracking-tight">Document Intake</h2>
           <p className="text-muted-foreground text-body">
-            Upload a governance PDF from your computer or Google Drive.
+            Upload a governance PDF. AI will extract text, suggest metadata, and index for search.
           </p>
         </div>
 
-        {/* Post-upload result card */}
-        {(isCategorizing || categorizeResult) && (
+        {/* Processing indicator */}
+        {isProcessing && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="rounded-xl border bg-card p-6 space-y-3"
           >
-            {isCategorizing ? (
-              <div className="flex flex-col items-center gap-2">
-                <Loader2 className="h-8 w-8 text-primary animate-spin" />
-                <p className="text-sm font-medium text-foreground">Categorizing document…</p>
-                <p className="text-xs text-muted-foreground">AI is analyzing the filename</p>
-              </div>
-            ) : categorizeResult ? (
-              <div className="flex flex-col items-center gap-3">
-                <CheckCircle2 className="h-8 w-8 text-primary" />
-                <p className="text-sm font-medium text-foreground">Document uploaded & categorized</p>
-                <Badge variant="default" className="text-sm px-3 py-1">
-                  {CATEGORY_LABELS[categorizeResult.category] || categorizeResult.category}
-                </Badge>
-                <span className="text-xs text-muted-foreground">
-                  Confidence: {categorizeResult.confidence}
-                </span>
-                <Button variant="outline" size="sm" onClick={resetUpload}>
-                  Upload another
-                </Button>
-              </div>
-            ) : null}
+            <div className="flex flex-col items-center gap-2">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+              <p className="text-sm font-medium text-foreground">Processing document…</p>
+              <p className="text-xs text-muted-foreground">AI is extracting text, suggesting metadata, and indexing for search</p>
+            </div>
           </motion.div>
         )}
 
         {/* Drop zone */}
-        {!categorizeResult && !isCategorizing && (
+        {!isProcessing && (
           <>
             <div
               onDragEnter={handleDrag}
@@ -210,7 +201,7 @@ export default function AdminDocuments() {
                   <p className="text-sm font-medium text-foreground">
                     Drop a PDF here to upload
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">or choose a source below</p>
+                  <p className="text-xs text-muted-foreground mt-1">Max 50MB • PDF only</p>
                 </>
               )}
             </div>
@@ -227,7 +218,7 @@ export default function AdminDocuments() {
               <Button
                 variant="outline"
                 className="flex-1 h-12"
-                onClick={() => toast.info("Google Drive integration coming soon. Connect in Settings → Integrations.")}
+                onClick={() => toast.info("Google Drive integration coming soon.")}
               >
                 <HardDrive className="h-4 w-4 mr-2" />
                 From Google Drive
@@ -241,7 +232,7 @@ export default function AdminDocuments() {
                   onClick={() => uploadMutation.mutate()}
                   disabled={uploadMutation.isPending}
                 >
-                  {uploadMutation.isPending ? "Uploading…" : "Upload Document"}
+                  {uploadMutation.isPending ? "Uploading…" : "Upload & Process Document"}
                 </Button>
               </motion.div>
             )}
@@ -252,8 +243,15 @@ export default function AdminDocuments() {
       {/* Document Library */}
       <div>
         <h3 className="text-lg font-semibold tracking-tight mb-4">Document Library</h3>
-        <DocumentLibrary />
+        <DocumentLibrary onReviewDocument={(id) => { setConfirmDocId(id); setConfirmOpen(true); }} />
       </div>
+
+      {/* Confirm Dialog */}
+      <DocumentConfirmDialog
+        documentId={confirmDocId}
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+      />
     </div>
   );
 }
