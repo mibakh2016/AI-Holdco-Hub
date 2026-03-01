@@ -49,7 +49,7 @@ export default function Holdings() {
               <TableCell className="font-bold">{holdings.reduce((s, t) => s + t.units, 0).toLocaleString()} ({holdings.reduce((s, t) => s + t.percent, 0).toFixed(2)}%)</TableCell>
               <TableCell className="font-bold">{fmt(holdings.reduce((s, t) => s + t.paidPrice, 0))}</TableCell>
               <TableCell></TableCell>
-              <TableCell className="font-bold text-primary">{fmt(holdings.reduce((s, t) => s + t.currentValue, 0))}</TableCell>
+              <TableCell className="font-bold text-status-success">{fmt(holdings.reduce((s, t) => s + t.currentValue, 0))}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableFooter>
