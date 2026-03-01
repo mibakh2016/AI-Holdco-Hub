@@ -9,7 +9,7 @@ export const currentUser = {
 export const holdingCompany = {
   name: "AI Holdco",
   description: "A holding company owning and operating a portfolio of applied AI ventures across healthcare, fintech, and enterprise automation. Founded in 2023, Nexus AI Holdings provides strategic capital, operational support, and shared infrastructure to its portfolio companies.",
-  currentValuation: 48_500_000,
+  currentValuation: 2_500_000,
   previousValuation: 42_000_000,
   unitPrice: 0.3,
   totalUnits: 8000,
