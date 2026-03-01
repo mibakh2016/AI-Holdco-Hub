@@ -194,6 +194,7 @@
   .text-table {
     font-size: 13px;
     line-height: 1.4;
+    color: hsl(var(--foreground));
   }
   .text-body {
     font-size: 14px;
