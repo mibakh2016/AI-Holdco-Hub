@@ -155,7 +155,7 @@
     letter-spacing: -0.02em;
     color: hsl(240 30% 14%);
   }
-  p, span, li, td, th, label, input, textarea, select {
+  p, li, td, th {
     color: hsl(240 12% 40%);
   }
 }
