@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, FileText, DollarSign, Clock } from "lucide-react";
+import { Users, FileText, DollarSign } from "lucide-react";
 import { StatCard } from "@/components/StatCard";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,11 +39,10 @@ export default function AdminDashboard() {
           <Loader2 className="h-8 w-8 text-primary animate-spin" />
         </div>
       ) : (
-        <div className="grid gap-sp-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-sp-4 sm:grid-cols-2 lg:grid-cols-3">
           <StatCard label="Total Shareholders" value={(stats?.totalShareholders ?? 0).toString()} icon={Users} delay={0} />
           <StatCard label="Documents Indexed" value={(stats?.documentsIndexed ?? 0).toString()} icon={FileText} delay={0.04} />
-          <StatCard label="Latest Valuation" value={fmt(stats?.latestValuation ?? 0)} icon={DollarSign} delay={0.08} />
-          <StatCard label="Pending Approvals" value={(stats?.pendingApprovals ?? 0).toString()} change="Requires attention" changeType="neutral" icon={Clock} delay={0.12} />
+          <StatCard label="Holdings Value" value={fmt(2500000)} icon={DollarSign} delay={0.08} />
         </div>
       )}
     </div>
