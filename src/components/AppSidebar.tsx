@@ -121,7 +121,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 space-y-2">
         <div className="flex items-center gap-3 rounded-md bg-sidebar-accent/60 p-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sidebar-primary text-[11px] font-bold text-sidebar-primary-foreground">
             MC
@@ -132,8 +132,11 @@ export function AppSidebar() {
               <span className="text-[11px] text-sidebar-muted">Shareholder</span>
             </div>
           )}
-          {!collapsed && <LogOut className="h-3.5 w-3.5 text-sidebar-muted cursor-pointer hover:text-sidebar-foreground transition-colors" />}
         </div>
+        <button className="flex items-center gap-2 w-full rounded-md px-2 py-2 text-orange-500 hover:bg-orange-500/10 transition-colors text-sm font-medium">
+          <LogOut className="h-4 w-4" />
+          {!collapsed && <span>Sign Out</span>}
+        </button>
       </SidebarFooter>
     </Sidebar>
   );
