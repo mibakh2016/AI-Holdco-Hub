@@ -99,7 +99,7 @@ export default function BuyShares() {
 
         <label className="flex items-center gap-3 cursor-pointer">
           <Checkbox checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} />
-          <span className="text-sm text-foreground">
+          <span className="text-sm font-medium text-foreground">
             I have read and agree to the Equity Units purchase agreement
           </span>
         </label>
