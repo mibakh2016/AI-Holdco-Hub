@@ -86,8 +86,8 @@ export default function AIAssistant() {
                 <Sparkles className="h-4.5 w-4.5 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-semibold">Document Assistant</p>
-                <p className="text-[11px] text-muted-foreground">AI-powered answers from your governance documents</p>
+                <p className="text-sm font-semibold text-black">Document Assistant</p>
+                <p className="text-[11px] text-black/60">AI-powered answers from your governance documents</p>
               </div>
               <Badge variant="default" className="ml-auto text-[10px]">RAG-Powered</Badge>
             </div>
@@ -116,8 +116,8 @@ export default function AIAssistant() {
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
                 <Bot className="h-12 w-12 text-muted-foreground/20" />
-                <p className="text-sm text-muted-foreground">Ask questions about your governance documents</p>
-                <p className="text-xs text-muted-foreground/70">AI searches through all indexed documents to find relevant answers with citations</p>
+                <p className="text-sm text-black/60">Ask questions about your governance documents</p>
+                <p className="text-xs text-black/40">AI searches through all indexed documents to find relevant answers with citations</p>
               </div>
             )}
             <AnimatePresence>
@@ -135,7 +135,7 @@ export default function AIAssistant() {
                   )}
                   <div className={`max-w-[80%] space-y-2 ${msg.role === "user" ? "text-right" : ""}`}>
                     <div className={`inline-block rounded-lg px-4 py-3 text-sm leading-relaxed ${
-                      msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-secondary"
+                      msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-secondary text-black"
                     }`}>
                       {msg.text}
                     </div>
@@ -165,7 +165,7 @@ export default function AIAssistant() {
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
                     <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
                   </div>
-                  <div className="inline-block rounded-lg px-4 py-3 text-sm bg-secondary text-muted-foreground">
+                  <div className="inline-block rounded-lg px-4 py-3 text-sm bg-secondary text-black/60">
                     Searching documents and generating response…
                   </div>
                 </motion.div>
@@ -176,7 +176,7 @@ export default function AIAssistant() {
         </ScrollArea>
       </div>
 
-      <p className="text-[11px] text-muted-foreground mt-3 text-center">
+      <p className="text-[11px] text-black/50 mt-3 text-center">
         AI answers are sourced exclusively from indexed documents with citations.
       </p>
     </div>
