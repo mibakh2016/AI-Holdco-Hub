@@ -138,7 +138,7 @@ export default function AdminValuations() {
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={2} className="font-bold text-base">
-                  Total Company Valuation
+                  Total Holdings Value
                 </TableCell>
                 <TableCell className="text-right font-bold text-base text-primary">
                   {fmt(total)}
