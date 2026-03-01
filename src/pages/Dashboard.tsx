@@ -13,11 +13,6 @@ const changePercent = (
 export default function Dashboard() {
   return (
     <div className="space-y-sp-6 max-w-6xl">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-1">
-        <h2 className="text-xl font-bold tracking-tight">Good morning, Maria</h2>
-        <p className="text-muted-foreground text-body">Here's your holdings summary for {holdingCompany.name}.</p>
-      </motion.div>
-
       <div className="grid gap-sp-4 sm:grid-cols-3">
         <StatCard label="Ownership" value={`${shareholderData.ownershipPercent}%`} icon={Percent} delay={0} />
         <StatCard
