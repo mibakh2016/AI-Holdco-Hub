@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { DollarSign, Save, Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,12 +30,14 @@ export default function AdminValuations() {
   });
 
   const [values, setValues] = useState<Record<string, string>>({});
+  const initializedRef = useRef(false);
 
   useEffect(() => {
-    if (entities) {
+    if (entities && !initializedRef.current) {
+      initializedRef.current = true;
       const initial: Record<string, string> = {};
       entities.forEach((e) => {
-        initial[e.id] = e.valuation_amount?.toString() ?? "0";
+        initial[e.id] = (e.valuation_amount ?? 0).toString();
       });
       setValues(initial);
     }
@@ -63,6 +65,7 @@ export default function AdminValuations() {
       if (error) throw error;
     },
     onSuccess: () => {
+      initializedRef.current = false;
       queryClient.invalidateQueries({ queryKey: ["portfolio-entities-valuation"] });
       queryClient.invalidateQueries({ queryKey: ["admin-dashboard-stats"] });
       toast({ title: "Valuation saved", description: `Total: ${fmt(total)}` });
