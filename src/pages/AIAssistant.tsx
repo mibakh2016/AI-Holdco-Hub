@@ -71,26 +71,53 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="flex gap-sp-4 h-[calc(100vh-8rem)] max-w-6xl">
-      <div className="flex-1 flex flex-col glass-card rounded-lg overflow-hidden">
-        <div className="p-sp-4 border-b flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
-            <Bot className="h-4 w-4 text-accent-foreground" />
+    <div className="flex flex-col items-center pt-4 h-[calc(100vh-8rem)] max-w-4xl mx-auto">
+      {/* Glowing search header */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full mb-6"
+      >
+        <div className="relative">
+          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-primary/30 via-accent/40 to-primary/30 blur-xl opacity-70 animate-pulse" />
+          <div className="relative rounded-2xl border border-primary/20 bg-card/95 backdrop-blur-sm p-5 shadow-[0_0_40px_-10px_hsl(var(--primary)/0.3)]">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 ring-2 ring-primary/20">
+                <Sparkles className="h-4.5 w-4.5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold">Document Assistant</p>
+                <p className="text-[11px] text-muted-foreground">AI-powered answers from your governance documents</p>
+              </div>
+              <Badge variant="default" className="ml-auto text-[10px]">RAG-Powered</Badge>
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
+              <div className="relative flex-1">
+                <Input
+                  placeholder="Ask about your governance documents..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={isLoading}
+                  className="pr-4 h-11 rounded-xl border-primary/20 bg-background/80 shadow-inner focus-visible:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)]"
+                />
+              </div>
+              <Button type="submit" size="icon" className="shrink-0 h-11 w-11 rounded-xl" disabled={isLoading}>
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
           </div>
-          <div>
-            <p className="text-sm font-semibold">Document Assistant</p>
-            <p className="text-[11px] text-muted-foreground">Answers from verified governance documents only</p>
-          </div>
-          <Badge variant="default" className="ml-auto text-[10px]">RAG-Powered</Badge>
         </div>
+      </motion.div>
 
-        <ScrollArea className="flex-1 p-sp-4">
+      {/* Chat area */}
+      <div className="flex-1 w-full overflow-hidden rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm">
+        <ScrollArea className="h-full p-sp-4">
           <div className="space-y-4">
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
-                <Sparkles className="h-10 w-10 text-muted-foreground/30" />
+              <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
+                <Bot className="h-12 w-12 text-muted-foreground/20" />
                 <p className="text-sm text-muted-foreground">Ask questions about your governance documents</p>
-                <p className="text-xs text-muted-foreground">AI searches through all indexed documents to find relevant answers with citations</p>
+                <p className="text-xs text-muted-foreground/70">AI searches through all indexed documents to find relevant answers with citations</p>
               </div>
             )}
             <AnimatePresence>
@@ -102,8 +129,8 @@ export default function AIAssistant() {
                   className={`flex gap-3 ${msg.role === "user" ? "justify-end" : ""}`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent">
-                      <Sparkles className="h-3.5 w-3.5 text-accent-foreground" />
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                      <Sparkles className="h-3.5 w-3.5 text-primary" />
                     </div>
                   )}
                   <div className={`max-w-[80%] space-y-2 ${msg.role === "user" ? "text-right" : ""}`}>
@@ -135,8 +162,8 @@ export default function AIAssistant() {
               ))}
               {isLoading && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent">
-                    <Loader2 className="h-3.5 w-3.5 text-accent-foreground animate-spin" />
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                    <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
                   </div>
                   <div className="inline-block rounded-lg px-4 py-3 text-sm bg-secondary text-muted-foreground">
                     Searching documents and generating response…
@@ -147,31 +174,11 @@ export default function AIAssistant() {
             <div ref={scrollRef} />
           </div>
         </ScrollArea>
-
-        <div className="p-sp-4 border-t">
-          <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
-            <Input
-              placeholder="Ask about your governance documents..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              disabled={isLoading}
-            />
-            <Button type="submit" size="icon" className="shrink-0" disabled={isLoading}>
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
-          <p className="text-[11px] text-muted-foreground mt-2 text-center">
-            AI answers are sourced exclusively from indexed documents with citations.
-          </p>
-        </div>
       </div>
 
-      <div className="hidden xl:flex w-[380px] glass-card rounded-lg items-center justify-center">
-        <div className="text-center space-y-3 p-8">
-          <FileText className="h-10 w-10 text-muted-foreground/30 mx-auto" />
-          <p className="text-sm text-muted-foreground">Click a citation to preview the source document here</p>
-        </div>
-      </div>
+      <p className="text-[11px] text-muted-foreground mt-3 text-center">
+        AI answers are sourced exclusively from indexed documents with citations.
+      </p>
     </div>
   );
 }
