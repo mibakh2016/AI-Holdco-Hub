@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 
 const fmt = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v);
+const fmtPrice = (v: number) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(v);
 
 export default function CompanyOverview() {
   return (
@@ -22,12 +24,19 @@ export default function CompanyOverview() {
           </div>
         </div>
         <p className="text-sm text-foreground leading-relaxed">{holdingCompany.description}</p>
+        <p className="text-sm font-semibold text-foreground">
+          Token Price – <span className="text-primary">{fmtPrice(holdingCompany.unitPrice)}</span>
+        </p>
         <div className="flex items-center gap-3 pt-1">
-          <Button variant="outline" size="sm" className="gap-2 text-xs">
-            <ExternalLink className="h-3 w-3" /> SEC Filing
+          <Button variant="outline" size="sm" className="gap-2 text-xs" asChild>
+            <a href={holdingCompany.websiteUrl} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="h-3 w-3" /> Website
+            </a>
           </Button>
-          <Button variant="outline" size="sm" className="gap-2 text-xs">
-            <ExternalLink className="h-3 w-3" /> Etherscan
+          <Button variant="outline" size="sm" className="gap-2 text-xs" asChild>
+            <a href={holdingCompany.etherscanUrl} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="h-3 w-3" /> Etherscan
+            </a>
           </Button>
         </div>
       </motion.div>
