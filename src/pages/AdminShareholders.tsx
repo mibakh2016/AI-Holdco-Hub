@@ -140,7 +140,7 @@ export default function AdminShareholders() {
               filtered.map((s) => (
                 <TableRow key={s.id}>
                   <TableCell className="font-medium text-table">{s.full_name}</TableCell>
-                  <TableCell className="text-table text-muted-foreground">{s.email}</TableCell>
+                  <TableCell className="text-table">{s.email}</TableCell>
                   <TableCell className="text-table text-right">{s.units.toLocaleString()}</TableCell>
                   <TableCell className="text-table text-right">{Number(s.ownership_percent).toFixed(2)}%</TableCell>
                   <TableCell>
@@ -151,7 +151,7 @@ export default function AdminShareholders() {
                       {s.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-table text-muted-foreground">
+                  <TableCell className="text-table">
                     {new Date(s.joined_date).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
