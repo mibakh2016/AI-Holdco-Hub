@@ -12,6 +12,8 @@ export const holdingCompany = {
   currentValuation: 48_500_000,
   previousValuation: 42_000_000,
   unitPrice: 187,
+  totalUnits: 8000,
+  soldUnits: 5842,
   websiteUrl: "#",
   etherscanUrl: "#",
   secFilingUrl: "#",
