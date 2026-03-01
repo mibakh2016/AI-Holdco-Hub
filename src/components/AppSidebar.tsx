@@ -43,7 +43,7 @@ const shareholderNav = [
 ];
 
 const adminNav = [
-  { title: "Admin Dashboard", url: "/admin", icon: Shield },
+  { title: "Home", url: "/admin", icon: Shield },
   { title: "Document Intake", url: "/admin/documents", icon: FileUp },
   { title: "Shareholders", url: "/admin/shareholders", icon: Users },
   { title: "Ownership Register", url: "/admin/ownership", icon: BookOpen },
