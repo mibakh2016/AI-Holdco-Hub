@@ -58,8 +58,9 @@ export default function DocumentConfirmDialog({ documentId, open, onOpenChange }
     enabled: !!documentId && open,
     refetchInterval: (query) => {
       const status = (query.state.data as any)?.processing_status;
-      return open && (status === "pending" || status === "extracting") ? 2000 : false;
+      return open && (status === "pending" || status === "extracting" || !status) ? 2000 : false;
     },
+    staleTime: 0,
   });
 
   const { data: shareholders } = useQuery({
@@ -138,15 +139,13 @@ export default function DocumentConfirmDialog({ documentId, open, onOpenChange }
   });
 
   const processing = (doc as any)?.processing_status;
-  const isProcessing = processing === "extracting";
+  const isProcessing = processing === "extracting" || processing === "pending" || !processing;
   const isFailed = processing === "failed";
   const isReady =
     !!doc &&
     (processing === "awaiting_confirmation" ||
       processing === "confirmed" ||
-      processing === "failed" ||
-      processing === "pending" ||
-      !processing);
+      processing === "failed");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
