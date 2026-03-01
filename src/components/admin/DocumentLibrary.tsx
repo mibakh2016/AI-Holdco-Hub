@@ -167,14 +167,14 @@ export default function DocumentLibrary({ onReviewDocument }: DocumentLibraryPro
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      {doc.status === "pending" && onReviewDocument && (
+                      {onReviewDocument && (
                         <Button
                           variant="outline"
                           size="sm"
                           className="h-8 text-xs"
                           onClick={() => onReviewDocument(doc.id)}
                         >
-                          <ClipboardCheck className="h-3 w-3 mr-1" /> Review
+                          <ClipboardCheck className="h-3 w-3 mr-1" /> {doc.status === "pending" ? "Review" : "Edit"}
                         </Button>
                       )}
                       {doc.file_url && (
