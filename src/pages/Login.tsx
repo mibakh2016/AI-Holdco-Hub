@@ -74,7 +74,7 @@ export default function Login() {
         className="w-full max-w-[400px] space-y-8"
       >
         <div className="text-center">
-          <h1 className="font-display text-[22px] font-bold tracking-tight text-foreground">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">
             Board Vault
           </h1>
         </div>
