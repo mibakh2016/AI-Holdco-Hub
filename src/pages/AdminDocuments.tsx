@@ -85,7 +85,6 @@ export default function AdminDocuments() {
         file_name: file.name,
         file_size: file.size,
         status: "pending",
-        processing_status: "pending",
       }]).select("id").single();
       if (error) throw error;
 
