@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { holdingCompany, capTable } from "@/lib/mock-data";
 import { ExternalLink, Building2, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 
 const fmt = (v: number) =>
@@ -44,27 +45,31 @@ export default function CompanyOverview() {
 
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="glass-card rounded-lg">
         <div className="p-sp-4 border-b">
-          <h3 className="font-semibold text-sm">Ownership Distribution</h3>
-          <p className="text-xs text-muted-foreground mt-0.5">Anonymized cap table</p>
+          <h3 className="font-semibold text-sm">Holders</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Holders: <span className="text-primary font-medium">{capTable.length}</span>
+          </p>
         </div>
-        <div className="p-sp-4 space-y-4">
-          {capTable.map((row, i) => (
-            <div key={row.name} className="space-y-1.5">
-              <div className="flex items-center justify-between text-table">
-                <span className={cn("font-medium", row.isCurrentUser && "text-primary")}>{row.name}</span>
-                <span className={cn("font-bold", row.isCurrentUser && "text-primary")}>{row.percent}%</span>
-              </div>
-              <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${row.percent}%` }}
-                  transition={{ duration: 0.5, delay: i * 0.04 }}
-                  className={cn("h-full rounded-full", row.isCurrentUser ? "bg-primary" : "bg-primary/40")}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Holder</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead className="text-right">Equity Tokens</TableHead>
+              <TableHead className="text-right">Share (%)</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {capTable.map((row, i) => (
+              <TableRow key={row.name}>
+                <TableCell className={cn("font-medium", row.isCurrentUser && "text-primary")}>{row.name}</TableCell>
+                <TableCell className="text-muted-foreground">{row.date ?? "—"}</TableCell>
+                <TableCell className="text-right">{row.tokens?.toLocaleString() ?? "—"}</TableCell>
+                <TableCell className={cn("text-right font-semibold", row.isCurrentUser ? "text-primary" : "text-status-success")}>{row.percent.toFixed(2)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </motion.div>
     </div>
   );

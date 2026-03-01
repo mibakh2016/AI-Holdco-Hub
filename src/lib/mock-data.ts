@@ -50,12 +50,12 @@ export const holdings = [
 ];
 
 export const capTable = [
-  { name: "Investor A", percent: 28.5 },
-  { name: "Investor B", percent: 18.2 },
-  { name: "Investor C", percent: 12.0 },
-  { name: "Investor D", percent: 9.8 },
-  { name: "You (Maria Chen)", percent: 4.25, isCurrentUser: true },
-  { name: "Other Shareholders", percent: 27.25 },
+  { name: "Investor A", percent: 28.50, tokens: 2280, date: "Dec 2, 2024" },
+  { name: "Investor B", percent: 18.20, tokens: 1456, date: "Dec 2, 2024" },
+  { name: "Investor C", percent: 12.00, tokens: 960, date: "Jan 15, 2025" },
+  { name: "Investor D", percent: 9.80, tokens: 784, date: "Mar 10, 2025" },
+  { name: "You (Maria Chen)", percent: 4.25, tokens: 340, date: "Mar 15, 2024", isCurrentUser: true },
+  { name: "Other Shareholders", percent: 27.25, tokens: 2180, date: "Various" },
 ];
 
 export const portfolioVentures = [
