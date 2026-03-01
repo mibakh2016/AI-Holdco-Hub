@@ -16,7 +16,7 @@ export default function Holdings() {
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50">
+            <TableRow className="bg-amber-50">
               <TableHead>Asset</TableHead>
               <TableHead>Address</TableHead>
               <TableHead>Date</TableHead>
@@ -44,7 +44,7 @@ export default function Holdings() {
             ))}
           </TableBody>
           <TableFooter>
-            <TableRow>
+            <TableRow className="bg-amber-50">
               <TableCell colSpan={3} className="font-bold text-base">Total</TableCell>
               <TableCell className="font-bold">{holdings.reduce((s, t) => s + t.units, 0).toLocaleString()} ({holdings.reduce((s, t) => s + t.percent, 0).toFixed(2)}%)</TableCell>
               <TableCell className="font-bold">{fmt(holdings.reduce((s, t) => s + t.paidPrice, 0))}</TableCell>
