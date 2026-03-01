@@ -47,9 +47,9 @@ const adminNav = [
   { title: "Document Intake", url: "/admin/documents", icon: FileUp },
   { title: "Shareholders", url: "/admin/shareholders", icon: Users },
   { title: "Ownership Register", url: "/admin/ownership", icon: BookOpen },
+  { title: "AI Assistant", url: "/admin/ai", icon: Bot },
   { title: "Valuations", url: "/admin/valuations", icon: TrendingUp },
   { title: "Portfolio Entities", url: "/admin/portfolio", icon: FolderOpen },
-  { title: "AI Assistant", url: "/admin/ai", icon: Bot },
   { title: "Audit Log", url: "/admin/audit", icon: Activity },
   { title: "Settings", url: "/admin/settings", icon: Settings },
 ];
