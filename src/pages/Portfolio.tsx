@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { portfolioVentures } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
-import { Layers, TrendingUp } from "lucide-react";
+import { Layers, TrendingUp, ExternalLink } from "lucide-react";
 
 export default function Portfolio() {
   return (
@@ -44,6 +44,9 @@ export default function Portfolio() {
                 <span className="font-semibold text-foreground">Latest Milestone:</span>
                 <span className="text-muted-foreground text-right ml-auto">{v.milestone}</span>
               </div>
+              <a href={v.websiteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline mt-2">
+                <ExternalLink className="h-3 w-3" /> Website
+              </a>
             </div>
           </motion.div>
         ))}
