@@ -1,31 +1,32 @@
 
 
-## Auto-Categorization After Document Upload
+## Add a Document Library to the Admin Documents Page
 
-### What it does
-After a PDF is successfully uploaded, the system will automatically analyze the document's filename and send it to an AI-powered backend function that categorizes it into one of the governance document types (e.g., "subscription_agreement", "board_resolution", "financial_report", "shareholder_agreement", "bylaws", "operating_agreement", "annual_report", "tax_document", "general"). The result is written back to the `documents` table and displayed to the user in a post-upload confirmation card.
+### Problem
+Currently `/admin/documents` only has an upload form. There is no way to view, search, or manage previously uploaded documents. The `documents` table already stores all the data needed.
 
-### Implementation Steps
+### What will be built
 
-**1. Create an edge function `categorize-document`**
-- Receives the document ID and filename/title
-- Calls Lovable AI (Gemini Flash) with a prompt asking it to classify the document based on its title/filename into a predefined category list
-- Uses tool calling to extract structured output: `{ category: string, confidence: string }`
-- Updates the `documents` row with the returned `document_type`
-- Returns the category to the frontend
+**Below the upload area on the same page**, add a documents table/list that shows all uploaded documents with:
 
-**2. Update `AdminDocuments.tsx` frontend**
-- After successful upload + DB insert, call the `categorize-document` edge function with the new document's ID and title
-- Show a post-upload state with a spinner ("Categorizing...") followed by the assigned category displayed in a badge/card
-- Handle errors gracefully (if categorization fails, document stays as "general" and user sees a note)
+- **Columns**: Title, Category (badge), File size, Status, Upload date, Actions (download/delete)
+- **Filtering**: Filter by category dropdown and search by title
+- **Sorting**: By date (newest first by default)
+- **Download**: Click to open/download the PDF via file_url
+- **Delete**: Remove document from DB and storage (with confirmation dialog)
 
-**3. No database schema changes needed**
-- The `document_type` column already exists on the `documents` table as a text field, currently defaulting to `"general"`. The AI will update it to a more specific value.
+### Implementation
 
-### Technical Details
+1. **Query documents** -- Add a `useQuery` that fetches from `documents` table ordered by `created_at desc`
+2. **Documents table component** -- Render below the upload area using the existing `Table` UI components, with category badges matching the `CATEGORY_LABELS` already defined
+3. **Search and filter bar** -- Simple input + select dropdown above the table
+4. **Delete mutation** -- Delete from both the `documents` table and `documents` storage bucket
+5. **Empty state** -- Show a message when no documents exist yet
 
-- **AI model**: `google/gemini-3-flash-preview` via Lovable AI gateway
-- **Edge function**: `supabase/functions/categorize-document/index.ts` -- uses `LOVABLE_API_KEY` (already configured) and `SUPABASE_URL` + service role key to update the document row server-side
-- **Categories**: subscription_agreement, board_resolution, financial_report, shareholder_agreement, bylaws, operating_agreement, annual_report, tax_document, meeting_minutes, general
-- **UI flow**: Upload button -> "Uploading..." -> success -> "Categorizing..." spinner -> category badge with result
+### Technical details
+- No database changes needed -- the table and columns already exist
+- Reuses existing `CATEGORY_LABELS` map already in `AdminDocuments.tsx`
+- Uses `@tanstack/react-query` for data fetching (already installed)
+- Uses existing `Table`, `Badge`, `Button`, `Select`, `Input` UI components
+- Page layout changes from centered upload-only to a full-width layout with upload section at top and document list below
 
