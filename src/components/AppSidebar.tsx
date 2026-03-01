@@ -14,7 +14,6 @@ import {
   Activity,
   Settings,
   LogOut,
-  ChevronDown,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -62,15 +61,15 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
-      <SidebarHeader className="p-4">
+      <SidebarHeader className="p-sp-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary font-display text-sm font-bold text-sidebar-primary-foreground">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary text-xs font-bold text-sidebar-primary-foreground">
             BV
           </div>
           {!collapsed && (
             <div className="flex flex-col">
-              <span className="font-display text-sm font-semibold text-sidebar-foreground">Board Vault</span>
-              <span className="text-xs text-sidebar-muted">Governance Portal</span>
+              <span className="text-sm font-semibold text-sidebar-foreground">Board Vault</span>
+              <span className="text-[11px] text-sidebar-muted">Governance Portal</span>
             </div>
           )}
         </div>
@@ -78,7 +77,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-sidebar-muted text-[11px] uppercase tracking-wider">
+          <SidebarGroupLabel className="text-sidebar-muted text-[11px] uppercase tracking-wider font-medium">
             {isAdmin ? "Administration" : "Investor Portal"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -89,7 +88,7 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/dashboard" || item.url === "/admin"}
-                      className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
+                      className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors rounded-md text-[13px]"
                       activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                     >
                       <item.icon className="mr-2 h-4 w-4 shrink-0" />
@@ -102,52 +101,29 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {!isAdmin && (
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to="/admin"
-                      className="text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
-                      activeClassName=""
-                    >
-                      <Shield className="mr-2 h-4 w-4 shrink-0" />
-                      {!collapsed && <span className="text-xs">Switch to Admin</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
-
-        {isAdmin && (
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to="/dashboard"
-                      className="text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
-                      activeClassName=""
-                    >
-                      <LayoutDashboard className="mr-2 h-4 w-4 shrink-0" />
-                      {!collapsed && <span className="text-xs">Switch to Investor</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink
+                    to={isAdmin ? "/dashboard" : "/admin"}
+                    className="text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors rounded-md text-[13px]"
+                    activeClassName=""
+                  >
+                    {isAdmin ? <LayoutDashboard className="mr-2 h-4 w-4 shrink-0" /> : <Shield className="mr-2 h-4 w-4 shrink-0" />}
+                    {!collapsed && <span className="text-xs">{isAdmin ? "Switch to Investor" : "Switch to Admin"}</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="p-3">
-        <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/50 p-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-primary text-xs font-bold text-sidebar-primary-foreground">
+        <div className="flex items-center gap-3 rounded-md bg-sidebar-accent/60 p-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sidebar-primary text-[11px] font-bold text-sidebar-primary-foreground">
             MC
           </div>
           {!collapsed && (
@@ -156,7 +132,7 @@ export function AppSidebar() {
               <span className="text-[11px] text-sidebar-muted">Shareholder</span>
             </div>
           )}
-          {!collapsed && <LogOut className="h-4 w-4 text-sidebar-muted cursor-pointer hover:text-sidebar-foreground transition-colors" />}
+          {!collapsed && <LogOut className="h-3.5 w-3.5 text-sidebar-muted cursor-pointer hover:text-sidebar-foreground transition-colors" />}
         </div>
       </SidebarFooter>
     </Sidebar>

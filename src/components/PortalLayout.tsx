@@ -32,21 +32,21 @@ export default function PortalLayout() {
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center justify-between border-b bg-card/50 backdrop-blur-sm px-4 sticky top-0 z-30">
+          <header className="h-12 flex items-center justify-between border-b bg-card px-sp-4 sticky top-0 z-30" style={{ boxShadow: 'var(--shadow-sm)' }}>
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-muted-foreground" />
-              <h1 className="font-display text-lg font-semibold tracking-tight">{title}</h1>
+              <h1 className="text-sm font-semibold tracking-tight">{title}</h1>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="relative text-muted-foreground">
+              <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-4 w-4" />
-                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">
                   3
                 </span>
               </Button>
             </div>
           </header>
-          <main className="flex-1 p-6 bg-background overflow-auto">
+          <main className="flex-1 p-sp-6 bg-background overflow-auto">
             <Outlet />
           </main>
         </div>
