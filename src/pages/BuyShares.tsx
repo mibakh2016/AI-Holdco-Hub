@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/supabase-client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const unitPrice = holdingCompany.unitPrice;
 const blockSizes = [2, 4, 10];
@@ -18,6 +19,7 @@ const fmt = (v: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format(v);
 
 export default function BuyShares() {
+  const { user, profile } = useAuth();
   const [selected, setSelected] = useState<number>(0);
   const [agreed, setAgreed] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -30,8 +32,9 @@ export default function BuyShares() {
     setConfirmOpen(false);
     try {
       const { error } = await supabase.from("purchase_requests").insert({
-        buyer_name: currentUser.name,
-        buyer_email: currentUser.email,
+        user_id: user?.id,
+        buyer_name: profile?.full_name || user?.email || "Unknown",
+        buyer_email: user?.email || "",
         units: blockSizes[selected],
         unit_price: unitPrice,
         total_cost: totalCost,
@@ -180,7 +183,7 @@ export default function BuyShares() {
           <div className="space-y-3 py-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Buyer:</span>
-              <span className="font-medium">{currentUser.name}</span>
+              <span className="font-medium">{profile?.full_name || user?.email}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Units:</span>
