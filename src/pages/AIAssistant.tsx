@@ -85,7 +85,7 @@ export default function AIAssistant() {
                 <Bot className="h-4.5 w-4.5 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-black">Document Assistant</p>
+                <p className="text-sm font-semibold text-black">Assistant</p>
                 <p className="text-[11px] text-black">AI-powered answers from your company info</p>
               </div>
               <Badge variant="default" className="ml-auto text-[10px]">RAG-Powered</Badge>
