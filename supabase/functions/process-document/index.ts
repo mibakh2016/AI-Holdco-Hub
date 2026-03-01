@@ -36,9 +36,12 @@ serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
 
+  let documentId: string | null = null;
+
   try {
-    const { document_id } = await req.json();
-    if (!document_id) {
+    const payload = await req.json();
+    documentId = payload?.document_id ?? null;
+    if (!documentId) {
       return new Response(JSON.stringify({ error: "document_id required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -49,7 +52,7 @@ serve(async (req) => {
     const { data: doc, error: docErr } = await supabase
       .from("documents")
       .select("*")
-      .eq("id", document_id)
+      .eq("id", documentId)
       .single();
     if (docErr || !doc) throw new Error("Document not found");
 
@@ -57,7 +60,7 @@ serve(async (req) => {
     await supabase
       .from("documents")
       .update({ processing_status: "extracting" })
-      .eq("id", document_id);
+      .eq("id", documentId);
 
     // Download the PDF from storage
     const filePath = doc.file_url?.split("/documents/")[1];
@@ -203,11 +206,11 @@ serve(async (req) => {
         },
         processing_status: "awaiting_confirmation",
       })
-      .eq("id", document_id);
+      .eq("id", documentId);
 
     // Step 2: Chunk the text and generate embeddings
     if (result.extracted_text) {
-      await chunkAndEmbed(supabase, document_id, result.extracted_text, LOVABLE_API_KEY);
+      await chunkAndEmbed(supabase, documentId, result.extracted_text, LOVABLE_API_KEY);
     }
 
     return new Response(JSON.stringify({
@@ -219,19 +222,17 @@ serve(async (req) => {
   } catch (e) {
     console.error("process-document error:", e);
 
-    // Update status to failed
-    try {
-      const { document_id } = await req.clone().json();
-      if (document_id) {
-        await supabase
-          .from("documents")
-          .update({ processing_status: "failed" })
-          .eq("id", document_id);
-      }
-    } catch {}
+    if (documentId) {
+      await supabase
+        .from("documents")
+        .update({ processing_status: "failed" })
+        .eq("id", documentId);
+    }
+
+    const message = e instanceof Error ? e.message : "Unknown error";
 
     return new Response(
-      JSON.stringify({ error: e.message }),
+      JSON.stringify({ error: message }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

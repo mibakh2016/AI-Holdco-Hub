@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-import { Loader2, CheckCircle2, AlertCircle, Link2, Calendar, User, Building2, FileText } from "lucide-react";
+import { Loader2, CheckCircle2, Link2, Calendar, User, Building2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -56,6 +56,10 @@ export default function DocumentConfirmDialog({ documentId, open, onOpenChange }
       return data;
     },
     enabled: !!documentId && open,
+    refetchInterval: (query) => {
+      const status = (query.state.data as any)?.processing_status;
+      return open && (status === "pending" || status === "extracting") ? 2000 : false;
+    },
   });
 
   const { data: shareholders } = useQuery({
@@ -134,9 +138,15 @@ export default function DocumentConfirmDialog({ documentId, open, onOpenChange }
   });
 
   const processing = (doc as any)?.processing_status;
-  const isProcessing = processing === "pending" || processing === "extracting";
+  const isProcessing = processing === "extracting";
   const isFailed = processing === "failed";
-  const isReady = processing === "awaiting_confirmation" || processing === "confirmed";
+  const isReady =
+    !!doc &&
+    (processing === "awaiting_confirmation" ||
+      processing === "confirmed" ||
+      processing === "failed" ||
+      processing === "pending" ||
+      !processing);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -160,10 +170,11 @@ export default function DocumentConfirmDialog({ documentId, open, onOpenChange }
         )}
 
         {isFailed && (
-          <div className="flex flex-col items-center gap-3 py-8">
-            <AlertCircle className="h-10 w-10 text-destructive" />
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 space-y-1">
             <p className="text-sm font-medium text-destructive">Processing failed</p>
-            <p className="text-xs text-muted-foreground">The document could not be processed. Check file quality.</p>
+            <p className="text-xs text-muted-foreground">
+              AI extraction failed, but you can still review fields manually and confirm this document.
+            </p>
           </div>
         )}
 
