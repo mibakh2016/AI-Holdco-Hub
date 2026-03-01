@@ -48,8 +48,8 @@ const adminNav = [
   { title: "Shareholders", url: "/admin/shareholders", icon: Users },
   
   { title: "AI Assistant", url: "/admin/ai", icon: Bot },
-  { title: "Valuations", url: "/admin/valuations", icon: TrendingUp },
   { title: "Portfolio Entities", url: "/admin/portfolio", icon: FolderOpen },
+  { title: "Valuations", url: "/admin/valuations", icon: TrendingUp },
   { title: "Audit Log", url: "/admin/audit", icon: Activity },
   { title: "Settings", url: "/admin/settings", icon: Settings },
 ];
