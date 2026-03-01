@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
-import { currentUser } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Save, Camera } from "lucide-react";
 import { useRef, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Profile() {
+  const { user, profile } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
@@ -18,6 +19,9 @@ export default function Profile() {
     }
   };
 
+  const displayName = profile?.full_name || user?.email || "User";
+  const initials = displayName.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+
   return (
     <div className="space-y-sp-4 max-w-2xl">
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-lg p-sp-6 space-y-6">
@@ -27,7 +31,7 @@ export default function Profile() {
               <img src={avatarUrl} alt="Avatar" className="h-14 w-14 rounded-full object-cover" />
             ) : (
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
-                {currentUser.avatarInitials}
+                {initials}
               </div>
             )}
             <button
@@ -45,28 +49,28 @@ export default function Profile() {
             />
           </div>
           <div>
-            <h3 className="font-semibold text-lg">{currentUser.name}</h3>
-            <p className="text-sm text-muted-foreground capitalize">{currentUser.role}</p>
+            <h3 className="font-semibold text-lg">{displayName}</h3>
+            <p className="text-sm text-muted-foreground">Shareholder</p>
           </div>
         </div>
 
         <div className="grid gap-sp-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label className="text-label">Full Name</Label>
-            <Input defaultValue={currentUser.name} />
+            <Input defaultValue={displayName} />
           </div>
           <div className="space-y-1.5">
             <Label className="text-label">Email</Label>
-            <Input defaultValue={currentUser.email} type="email" disabled className="opacity-60" />
+            <Input defaultValue={user?.email || ""} type="email" disabled className="opacity-60" />
             <p className="text-xs text-muted-foreground">Only an admin can change your email</p>
           </div>
           <div className="space-y-1.5">
             <Label className="text-label">Phone</Label>
-            <Input defaultValue="+1 (555) 123-4567" />
+            <Input defaultValue="" placeholder="Enter phone number" />
           </div>
           <div className="space-y-1.5">
             <Label className="text-label">Mail Address</Label>
-            <Input defaultValue="123 Market St, San Francisco, CA 94105" />
+            <Input defaultValue="" placeholder="Enter address" />
           </div>
         </div>
 
