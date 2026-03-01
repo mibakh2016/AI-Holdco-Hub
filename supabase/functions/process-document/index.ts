@@ -283,63 +283,16 @@ async function chunkAndEmbed(
 
   if (chunks.length === 0) return;
 
-  // Generate embeddings in batches
+  // Store chunks (embeddings not supported by gateway, store text only for search)
   const BATCH_SIZE = 10;
   for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
     const batch = chunks.slice(i, i + BATCH_SIZE);
-    const textsToEmbed = batch.map((c) => c.text);
-
-    try {
-      // Use Gemini embedding model via gateway
-      const embResponse = await fetch("https://ai.gateway.lovable.dev/v1/embeddings", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/text-embedding-004",
-          input: textsToEmbed,
-        }),
-      });
-
-      if (!embResponse.ok) {
-        console.error("Embedding error:", await embResponse.text());
-        // Store chunks without embeddings
-        const rows = batch.map((c) => ({
-          document_id: documentId,
-          page_number: c.page,
-          chunk_text: c.text,
-          is_active: true,
-        }));
-        await supabase.from("document_chunks").insert(rows);
-        continue;
-      }
-
-      const embData = await embResponse.json();
-      const embeddings = embData.data || [];
-
-      const rows = batch.map((c, idx) => ({
-        document_id: documentId,
-        page_number: c.page,
-        chunk_text: c.text,
-        embedding: embeddings[idx]?.embedding
-          ? JSON.stringify(embeddings[idx].embedding)
-          : null,
-        is_active: true,
-      }));
-
-      await supabase.from("document_chunks").insert(rows);
-    } catch (err) {
-      console.error("Chunk embedding error:", err);
-      // Store without embeddings as fallback
-      const rows = batch.map((c) => ({
-        document_id: documentId,
-        page_number: c.page,
-        chunk_text: c.text,
-        is_active: true,
-      }));
-      await supabase.from("document_chunks").insert(rows);
-    }
+    const rows = batch.map((c) => ({
+      document_id: documentId,
+      page_number: c.page,
+      chunk_text: c.text,
+      is_active: true,
+    }));
+    await supabase.from("document_chunks").insert(rows);
   }
 }
