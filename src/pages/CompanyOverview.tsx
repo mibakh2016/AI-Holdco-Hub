@@ -20,7 +20,7 @@ export default function CompanyOverview() {
             <p className="text-sm text-muted-foreground">Holding Company</p>
           </div>
         </div>
-        <p className="text-sm text-muted-foreground leading-relaxed">{holdingCompany.description}</p>
+        <p className="text-sm text-foreground leading-relaxed">{holdingCompany.description}</p>
         <div className="flex items-center gap-3 pt-1">
           <Button variant="outline" size="sm" className="gap-2 text-xs">
             <ExternalLink className="h-3 w-3" /> SEC Filing
