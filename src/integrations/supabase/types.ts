@@ -247,6 +247,7 @@ export type Database = {
           description: string | null
           id: string
           latest_milestone: string | null
+          logo_url: string | null
           name: string
           sector: string | null
           stake_percent: number
@@ -259,6 +260,7 @@ export type Database = {
           description?: string | null
           id?: string
           latest_milestone?: string | null
+          logo_url?: string | null
           name: string
           sector?: string | null
           stake_percent?: number
@@ -271,6 +273,7 @@ export type Database = {
           description?: string | null
           id?: string
           latest_milestone?: string | null
+          logo_url?: string | null
           name?: string
           sector?: string | null
           stake_percent?: number
