@@ -34,7 +34,8 @@ export default function PortalLayout() {
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-12 flex items-center justify-between border-b bg-card px-sp-4 sticky top-0 z-30" style={{ boxShadow: 'var(--shadow-sm)' }}>
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-muted-foreground" />
+              <SidebarTrigger className="text-foreground" />
+              <div className="h-6 w-6 rounded bg-yellow-400 shrink-0 md:hidden" />
               <h1 className="text-sm font-semibold tracking-tight">{title}</h1>
             </div>
             <div className="flex items-center gap-2">
