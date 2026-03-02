@@ -74,9 +74,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="p-sp-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 text-xs font-bold text-black">
-            BV
-          </div>
+          <div className="h-8 w-8 rounded-lg bg-yellow-400" />
           {!collapsed && (
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-sidebar-foreground">AI Holdco Hub</span>
