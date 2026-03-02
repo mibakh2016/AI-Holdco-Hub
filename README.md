@@ -5,7 +5,6 @@
 ## How it was built?
 
 ## Backend
-Backend 
 
 Database (PostgreSQL) — Stores all data: shareholders, documents, portfolio entities, valuations, purchase requests, user profiles, audit logs, and user roles. Row Level Security (RLS) policies protect data access.
 
