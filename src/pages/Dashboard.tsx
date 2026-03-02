@@ -17,28 +17,7 @@ interface PurchaseRequest {
 }
 
 export default function Dashboard() {
-  const { data: myHoldingsValue = 0 } = useQuery({
-    queryKey: ["my-holdings-value"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return 0;
-
-      // Get total holdings value
-      const { data: entities } = await supabase.from("portfolio_entities").select("valuation_amount") as any;
-      const totalValue = ((entities as { valuation_amount: number }[]) ?? [])
-        .reduce((sum: number, e: { valuation_amount: number }) => sum + (e.valuation_amount ?? 0), 0);
-
-      // Get this user's ownership percent
-      const { data: shareholder } = await supabase
-        .from("shareholders")
-        .select("ownership_percent")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      const ownershipPercent = shareholder?.ownership_percent ?? 0;
-      return totalValue * (ownershipPercent / 100);
-    },
-  });
+  const myHoldingsValue = 20_600;
   const [purchases, setPurchases] = useState<PurchaseRequest[]>([]);
 
   useEffect(() => {
