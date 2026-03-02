@@ -55,10 +55,14 @@ const adminNav = [
 ];
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, isMobile, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
+
+  const closeMobileSidebar = () => {
+    if (isMobile) setOpenMobile(false);
+  };
 
   const displayName = profile?.full_name || user?.email || "User";
   const initials = displayName.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
@@ -97,6 +101,7 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/dashboard" || item.url === "/admin"}
+                      onClick={closeMobileSidebar}
                       className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:font-semibold transition-colors rounded-md text-[13px]"
                       activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium border-l-[3px] border-primary"
                     >
@@ -117,6 +122,7 @@ export function AppSidebar() {
                 <SidebarMenuButton asChild>
                   <NavLink
                     to={isAdmin ? "/dashboard" : "/admin"}
+                    onClick={closeMobileSidebar}
                     className="text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors rounded-md text-[13px]"
                     activeClassName=""
                   >
